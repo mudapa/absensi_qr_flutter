@@ -1,8 +1,11 @@
+import 'package:absensi_qr/cubit/auth/auth_cubit.dart';
 import 'package:absensi_qr/ui/pages/home/content/data_absen_page.dart';
 import 'package:absensi_qr/ui/pages/home/content/data_kelas_page.dart';
 import 'package:absensi_qr/ui/pages/home/content/generate_qr_page.dart';
 import 'package:absensi_qr/ui/pages/home/content/scan_qr_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'content/dashboard_page.dart';
 import 'content/data_siswa_page.dart';
@@ -61,6 +64,41 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    void logout() {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Logout'),
+            content: const Text('Apakah anda yakin ingin logout?'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Tidak')),
+              TextButton(
+                  onPressed: () {
+                    context.read<AuthCubit>().signOut();
+                    // Toast
+                    Fluttertoast.showToast(
+                      msg: 'Berhasil logout',
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0,
+                    );
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, '/', (route) => false);
+                  },
+                  child: const Text('Ya')),
+            ],
+          );
+        },
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         leading: Builder(
@@ -88,8 +126,7 @@ class _MainPageState extends State<MainPage> {
             ),
             child: IconButton(
               onPressed: () {
-                Navigator.pushNamedAndRemoveUntil(
-                    context, '/', (route) => false);
+                logout();
               },
               icon: const Icon(
                 Icons.logout_rounded,
@@ -112,19 +149,19 @@ class _MainPageState extends State<MainPage> {
           // Important: Remove any padding from the ListView.
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
+            DrawerHeader(
+              decoration: const BoxDecoration(
                 color: Colors.blue,
               ),
               child: Center(
                 child: Column(
                   children: [
-                    Icon(
-                      Icons.qr_code_scanner_rounded,
-                      size: 100,
-                      color: Colors.white,
+                    Image.asset(
+                      'assets/logo.png',
+                      width: 100,
+                      height: 100,
                     ),
-                    Text(
+                    const Text(
                       'ABSENSI QR',
                       style: TextStyle(
                         color: Colors.white,
