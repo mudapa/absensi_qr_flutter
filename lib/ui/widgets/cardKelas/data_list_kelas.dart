@@ -82,16 +82,22 @@ class DataListKelas extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Text(
-              no,
-              style: const TextStyle(
-                fontSize: 18,
+            SizedBox(
+              width: 40,
+              child: Text(
+                no,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-            Text(
-              kelas,
-              style: const TextStyle(
-                fontSize: 18,
+            SizedBox(
+              width: 120,
+              child: Text(
+                kelas,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             CustomButton(
@@ -104,7 +110,7 @@ class DataListKelas extends StatelessWidget {
             ),
           ],
         ),
-        const Divider(),
+        const SizedBox(height: 18),
       ],
     );
   }

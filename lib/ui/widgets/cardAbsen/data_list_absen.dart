@@ -173,14 +173,30 @@ class _DataListAbsenState extends State<DataListAbsen> {
               ),
             ),
             SizedBox(
-              width: 120,
-              child: CustomButton(
-                title: 'Edit',
-                onPressed: () {
-                  editKelas();
-                },
-                width: 90,
-                color: Colors.cyan,
+              width: 210,
+              child: Row(
+                children: [
+                  CustomButton(
+                    title: 'Edit',
+                    onPressed: () {
+                      editKelas();
+                    },
+                    width: 90,
+                    color: Colors.cyan,
+                  ),
+                  const SizedBox(width: 8),
+                  CustomButton(
+                    icon: Image.asset(
+                      'assets/whatsapp.png',
+                      width: 24,
+                      height: 24,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {},
+                    width: 100,
+                    color: Colors.green,
+                  ),
+                ],
               ),
             ),
           ],

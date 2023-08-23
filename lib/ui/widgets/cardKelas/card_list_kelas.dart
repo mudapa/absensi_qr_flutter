@@ -23,41 +23,57 @@ class CardListKelas extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Text(
-                'NO',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.purple,
-                ),
-              ),
-              Text(
-                'KELAS',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.purple,
-                ),
-              ),
-              Row(
-                children: [
-                  Text(
-                    'AKSI',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.purple,
-                    ),
+              SizedBox(
+                width: 40,
+                child: Text(
+                  'NO',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.purple,
                   ),
-                  SizedBox(width: 12),
-                  Icon(Icons.edit, color: Colors.purple),
-                ],
+                ),
+              ),
+              SizedBox(
+                width: 120,
+                child: Text(
+                  'KELAS',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.purple,
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 100,
+                child: Text(
+                  'AKSI',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.purple,
+                  ),
+                ),
               ),
             ],
           ),
-          Divider(),
+          SizedBox(height: 12),
           Column(
             children: [
-              DataListKelas(no: '1', kelas: 'VII'),
-              DataListKelas(no: '2', kelas: 'VIII'),
-              DataListKelas(no: '3', kelas: 'IX'),
+              DataListKelas(
+                no: '1',
+                kelas: 'VII-A',
+              ),
+              DataListKelas(
+                no: '1',
+                kelas: 'VII-A',
+              ),
+              DataListKelas(
+                no: '1',
+                kelas: 'VII-A',
+              ),
+              DataListKelas(
+                no: '1',
+                kelas: 'VII-A',
+              ),
             ],
           ),
         ],

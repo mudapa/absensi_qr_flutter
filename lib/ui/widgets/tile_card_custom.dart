@@ -47,7 +47,7 @@ class _TileCardCustomState extends State<TileCardCustom> {
             ],
           ),
           Divider(),
-          SizedBox(height: 64),
+          SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [

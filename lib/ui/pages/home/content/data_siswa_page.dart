@@ -184,7 +184,7 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
                         ),
                       ),
                       Container(
-                        width: 150,
+                        width: 120,
                         height: 70,
                         decoration: BoxDecoration(
                           border: Border.all(
@@ -234,8 +234,8 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
                           Icons.add,
                           color: Colors.white,
                         ),
-                        title: 'Tambah',
-                        width: 130,
+                        // title: 'Tambah',
+                        width: 80,
                         color: Colors.green,
                         onPressed: () {
                           tambahSiswa();

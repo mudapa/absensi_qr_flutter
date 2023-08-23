@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../widgets/cardAbsen/card_list_absen.dart';
-import '../../../widgets/custom_button.dart';
 
 class DataAbsenPage extends StatefulWidget {
   const DataAbsenPage({Key? key}) : super(key: key);

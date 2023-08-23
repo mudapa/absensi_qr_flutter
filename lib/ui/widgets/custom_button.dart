@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
-  final String title;
+  final String? title;
   final double width;
   final Function() onPressed;
   final EdgeInsets margin;
   final Color? color;
-  final Icon? icon;
+  final Widget? icon;
 
   const CustomButton({
     Key? key,
-    required this.title,
+    this.title,
     this.width = double.infinity,
     required this.onPressed,
     this.margin = EdgeInsets.zero,
@@ -38,8 +38,9 @@ class CustomButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             icon ?? const SizedBox(),
+            icon != null ? const SizedBox(width: 2) : const SizedBox(),
             Text(
-              title,
+              title ?? '',
               style: const TextStyle(
                 color: Colors.white,
               ),
