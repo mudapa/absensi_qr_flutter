@@ -1,12 +1,13 @@
-import 'package:absensi_qr/cubit/auth/auth_cubit.dart';
-import 'package:absensi_qr/ui/pages/home/main_page.dart';
-import 'package:absensi_qr/ui/pages/sign_in_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'cubit/auth/auth_cubit.dart';
+import 'cubit/class/class_cubit.dart';
 import 'firebase_options.dart';
+import 'ui/pages/home/main_page.dart';
+import 'ui/pages/sign_in_page.dart';
 import 'ui/pages/splash_screen.dart';
 
 Future<void> main() async {
@@ -31,6 +32,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => AuthCubit(),
+        ),
+        BlocProvider(
+          create: (context) => ClassCubit(),
         ),
       ],
       child: MaterialApp(

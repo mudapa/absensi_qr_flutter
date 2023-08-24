@@ -1,10 +1,17 @@
+import 'package:absensi_qr/cubit/class/class_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'data_list_kelas.dart';
 
-class CardListKelas extends StatelessWidget {
+class CardListKelas extends StatefulWidget {
   const CardListKelas({Key? key}) : super(key: key);
 
+  @override
+  State<CardListKelas> createState() => _CardListKelasState();
+}
+
+class _CardListKelasState extends State<CardListKelas> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -18,9 +25,9 @@ class CardListKelas extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
       ),
-      child: const Column(
+      child: Column(
         children: [
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               SizedBox(
@@ -55,26 +62,20 @@ class CardListKelas extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 12),
-          Column(
-            children: [
-              DataListKelas(
-                no: '1',
-                kelas: 'VII-A',
-              ),
-              DataListKelas(
-                no: '1',
-                kelas: 'VII-A',
-              ),
-              DataListKelas(
-                no: '1',
-                kelas: 'VII-A',
-              ),
-              DataListKelas(
-                no: '1',
-                kelas: 'VII-A',
-              ),
-            ],
+          const SizedBox(height: 12),
+          BlocBuilder<ClassCubit, ClassState>(
+            builder: (context, state) {
+              if (state is ClassSuccess) {
+                return Column(
+                  children: state.classes.map((kelas) {
+                    return DataListKelas(kelas, state.classes.indexOf(kelas));
+                  }).toList(),
+                );
+              } else {
+                BlocProvider.of<ClassCubit>(context).getClasses();
+                return const SizedBox();
+              }
+            },
           ),
         ],
       ),

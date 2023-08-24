@@ -1,10 +1,20 @@
+import 'package:absensi_qr/cubit/class/class_cubit.dart';
 import 'package:absensi_qr/ui/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../widgets/cardKelas/card_list_kelas.dart';
 
-class DataKelasPage extends StatelessWidget {
+class DataKelasPage extends StatefulWidget {
   const DataKelasPage({Key? key}) : super(key: key);
+
+  @override
+  State<DataKelasPage> createState() => _DataKelasPageState();
+}
+
+class _DataKelasPageState extends State<DataKelasPage> {
+  final _classController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +35,7 @@ class DataKelasPage extends StatelessWidget {
               ),
               const SizedBox(height: 32),
               TextFormField(
+                controller: _classController,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.grey.withOpacity(0.1),
@@ -62,6 +73,20 @@ class DataKelasPage extends StatelessWidget {
             CustomButton(
               title: 'Simpan',
               onPressed: () {
+                context.read<ClassCubit>().addClass(
+                      kelas: _classController.text,
+                      createdAt: DateTime.now(),
+                      updatedAt: DateTime.now(),
+                    );
+                Fluttertoast.showToast(
+                  msg: 'Berhasil menambahkan data kelas',
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.CENTER,
+                  backgroundColor: Colors.green,
+                  textColor: Colors.white,
+                  fontSize: 16.0,
+                );
+                _classController.clear();
                 Navigator.pop(context);
               },
               width: 100,

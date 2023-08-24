@@ -1,4 +1,5 @@
 import 'package:absensi_qr/cubit/auth/auth_cubit.dart';
+import 'package:absensi_qr/cubit/class/class_cubit.dart';
 import 'package:absensi_qr/ui/pages/home/content/data_absen_page.dart';
 import 'package:absensi_qr/ui/pages/home/content/data_kelas_page.dart';
 import 'package:absensi_qr/ui/pages/home/content/generate_qr_page.dart';
@@ -20,13 +21,14 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
   String titleName = '';
-  static const List<Widget> _widgetOptions = <Widget>[
-    DashboardPage(),
-    DataSiswaPage(),
-    DataAbsenPage(),
-    DataKelasPage(),
-    GenerateQrPage(),
-    ScanQrPage(),
+
+  List<Widget> widgetOptions = [
+    const DashboardPage(),
+    const DataSiswaPage(),
+    const DataAbsenPage(),
+    const DataKelasPage(),
+    const GenerateQrPage(),
+    const ScanQrPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -138,8 +140,29 @@ class _MainPageState extends State<MainPage> {
         backgroundColor: Colors.blue,
       ),
       backgroundColor: Colors.grey[200],
-      body: Center(
-        child: _widgetOptions[_selectedIndex],
+      body: RefreshIndicator(
+        onRefresh: () {
+          switch (_selectedIndex) {
+            case 0:
+              break;
+            case 1:
+              break;
+            case 2:
+              break;
+            case 3:
+              context.read<ClassCubit>().getClasses();
+              break;
+            case 4:
+              break;
+            case 5:
+              break;
+            default:
+          }
+          return Future.delayed(const Duration(seconds: 1));
+        },
+        child: Center(
+          child: widgetOptions[_selectedIndex],
+        ),
       ),
       drawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
@@ -255,6 +278,7 @@ class _MainPageState extends State<MainPage> {
                 // Update the state of the app
                 _onItemTapped(3);
                 _setTitleName(3);
+                context.read<ClassCubit>().getClasses();
                 // Then close the drawer
                 Navigator.pop(context);
               },
