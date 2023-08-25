@@ -153,6 +153,7 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
                 _nisTextController.clear();
                 _nameTextController.clear();
                 _phoneController.clear();
+                context.read<StudentCubit>().getStudents();
                 Navigator.pop(context);
               },
               width: 100,
@@ -253,13 +254,21 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
                                 DropdownMenuItem<String>(
                                   value: 'SEMUA',
                                   child: const Text('SEMUA'),
-                                  onTap: () {},
+                                  onTap: () {
+                                    context.read<StudentCubit>().getStudents();
+                                  },
                                 ),
                                 ...widget.kelas.map((kelas) {
                                   return DropdownMenuItem<String>(
                                     value: kelas.grade,
                                     child: Text(kelas.grade),
-                                    onTap: () {},
+                                    onTap: () {
+                                      context
+                                          .read<StudentCubit>()
+                                          .filterStudent(
+                                            grade: kelas.grade,
+                                          );
+                                    },
                                   );
                                 }).toList(),
                               ],

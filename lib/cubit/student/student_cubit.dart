@@ -110,4 +110,25 @@ class StudentCubit extends Cubit<StudentState> {
       emit(StudentFailed(error: e.toString()));
     }
   }
+
+  // filter student by grade from Firestore
+  void filterStudent({
+    required String grade,
+  }) async {
+    try {
+      // Set StudentLoading
+      emit(StudentLoading());
+
+      // Get all students from Firestore
+      List<StudentModel> students = await StudentService().filterStudent(
+        grade: grade,
+      );
+
+      // Set StudentSuccess
+      emit(StudentSuccess(students: students));
+    } catch (e) {
+      // Set StudentFailed
+      emit(StudentFailed(error: e.toString()));
+    }
+  }
 }

@@ -123,7 +123,6 @@ class CardListSiswa extends StatelessWidget {
                     }).toList(),
                   );
                 } else {
-                  BlocProvider.of<StudentCubit>(context).getStudents();
                   return const SizedBox();
                 }
               },

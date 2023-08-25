@@ -128,4 +128,31 @@ class StudentService {
       rethrow;
     }
   }
+
+  // filter Student Data from Firestore
+  Future<List<StudentModel>> filterStudent({
+    required String grade,
+  }) async {
+    try {
+      // get Student Data from Firestore
+      QuerySnapshot result = await _studentReference
+          .where(
+            'grade',
+            isEqualTo: grade,
+          )
+          .get();
+
+      // convert to list of students
+      List<StudentModel> students = result.docs.map(
+        (e) {
+          return StudentModel.fromJson(e.id, e.data() as Map<String, dynamic>);
+        },
+      ).toList();
+
+      // Return List of StudentModel
+      return students;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
