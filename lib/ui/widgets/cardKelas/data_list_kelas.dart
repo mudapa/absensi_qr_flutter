@@ -77,7 +77,7 @@ class _DataListKelasState extends State<DataListKelas> {
             ),
             const SizedBox(width: 8),
             CustomButton(
-              title: 'Edit',
+              title: 'Ubah',
               onPressed: () {
                 context.read<ClassCubit>().updateClass(
                       id: widget.kelas.id,
@@ -156,12 +156,12 @@ class _DataListKelasState extends State<DataListKelas> {
     }
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(
-              width: 130,
+              width: 100,
               child: Text(
                 '${widget.index + 1}',
                 style: const TextStyle(
@@ -181,7 +181,7 @@ class _DataListKelasState extends State<DataListKelas> {
             Row(
               children: [
                 CustomButton(
-                  title: 'Edit',
+                  title: 'Ubah',
                   onPressed: () {
                     editKelas();
                   },

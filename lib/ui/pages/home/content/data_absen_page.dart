@@ -1,9 +1,18 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../cubit/attendance/attendance_cubit.dart';
+import '../../../../model/class_model.dart';
 import '../../../widgets/cardAbsen/card_list_absen.dart';
 
 class DataAbsenPage extends StatefulWidget {
-  const DataAbsenPage({Key? key}) : super(key: key);
+  final List<ClassModel> kelas;
+  const DataAbsenPage(
+    this.kelas, {
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<DataAbsenPage> createState() => _DataAbsenPageState();
@@ -11,6 +20,22 @@ class DataAbsenPage extends StatefulWidget {
 
 class _DataAbsenPageState extends State<DataAbsenPage> {
   String _filterClass = 'SEMUA';
+  late DateTime _dateTime;
+
+  @override
+  void initState() {
+    super.initState();
+    _dateTime = DateTime.now(); // Initialize _dateTime in initState
+
+    // Set up a Timer to update _dateTime every second
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (mounted) {
+        setState(() {
+          _dateTime = DateTime.now();
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,13 +82,25 @@ class _DataAbsenPageState extends State<DataAbsenPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Daftar Absensi Siswa',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Daftar Absensi Siswa',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '${_dateTime.year}-${_dateTime.month}-${_dateTime.day} ${_dateTime.hour}:${_dateTime.minute}:${_dateTime.second}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
                       ),
                       Container(
                         width: 120,
@@ -78,9 +115,9 @@ class _DataAbsenPageState extends State<DataAbsenPage> {
                         child: Column(
                           children: [
                             const Text(
-                              'KELAS',
+                              'URUTKAN KELAS',
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 10,
                                 color: Colors.white,
                               ),
                             ),
@@ -98,13 +135,30 @@ class _DataAbsenPageState extends State<DataAbsenPage> {
                                   _filterClass = newValue!;
                                 });
                               },
-                              items: <String>['SEMUA', 'VII', 'VIII', 'IX']
-                                  .map((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
+                              items: [
+                                DropdownMenuItem<String>(
+                                  value: 'SEMUA',
+                                  child: const Text('SEMUA'),
+                                  onTap: () {
+                                    context
+                                        .read<AttendanceCubit>()
+                                        .getAttendances();
+                                  },
+                                ),
+                                ...widget.kelas.map((kelas) {
+                                  return DropdownMenuItem<String>(
+                                    value: kelas.grade,
+                                    child: Text(kelas.grade),
+                                    onTap: () {
+                                      context
+                                          .read<AttendanceCubit>()
+                                          .filterAttendance(
+                                            grade: kelas.grade,
+                                          );
+                                    },
+                                  );
+                                }).toList(),
+                              ],
                             ),
                           ],
                         ),

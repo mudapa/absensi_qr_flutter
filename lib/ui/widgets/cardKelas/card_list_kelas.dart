@@ -17,67 +17,70 @@ class _CardListKelasState extends State<CardListKelas> {
     return Container(
       padding: const EdgeInsets.only(
         top: 60,
-        left: 32,
-        right: 32,
+        left: 16,
+        right: 8,
       ),
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
       ),
-      child: Column(
-        children: [
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                width: 40,
-                child: Text(
-                  'NO',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.purple,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Row(
+              children: [
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    'NO',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.purple,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                width: 120,
-                child: Text(
-                  'KELAS',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.purple,
+                SizedBox(
+                  width: 120,
+                  child: Text(
+                    'KELAS',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.purple,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                width: 100,
-                child: Text(
-                  'AKSI',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.purple,
+                SizedBox(
+                  width: 150,
+                  child: Text(
+                    'AKSI',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.purple,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          BlocBuilder<ClassCubit, ClassState>(
-            builder: (context, state) {
-              if (state is ClassSuccess) {
-                return Column(
-                  children: state.classes.map((kelas) {
-                    return DataListKelas(kelas, state.classes.indexOf(kelas));
-                  }).toList(),
-                );
-              } else {
-                BlocProvider.of<ClassCubit>(context).getClasses();
-                return const SizedBox();
-              }
-            },
-          ),
-        ],
+              ],
+            ),
+            const SizedBox(height: 12),
+            BlocBuilder<ClassCubit, ClassState>(
+              builder: (context, state) {
+                if (state is ClassSuccess) {
+                  return Column(
+                    children: state.classes.map((kelas) {
+                      return DataListKelas(kelas, state.classes.indexOf(kelas));
+                    }).toList(),
+                  );
+                } else {
+                  BlocProvider.of<ClassCubit>(context).getClasses();
+                  return const SizedBox();
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../cubit/attendance/attendance_cubit.dart';
 import '../../../cubit/auth/auth_cubit.dart';
 import '../../../cubit/class/class_cubit.dart';
 import '../../../cubit/student/student_cubit.dart';
@@ -23,23 +24,10 @@ class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
   String titleName = '';
 
-  List<Widget> widgetOptions = [
-    const DashboardPage(),
-    BlocBuilder<ClassCubit, ClassState>(
-      builder: (context, state) {
-        if (state is ClassSuccess) {
-          return DataSiswaPage(state.classes);
-        } else {
-          context.read<ClassCubit>().getClasses();
-          return Center(child: Text('$state.error'));
-        }
-      },
-    ),
-    const DataAbsenPage(),
-    const DataKelasPage(),
-    const GenerateQrPage(),
-    const ScanQrPage(),
-  ];
+  void _onDataSiswaPageRequested() {
+    _onItemTapped(1);
+    _setTitleName(1);
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -76,6 +64,41 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> widgetOptions = [
+      // dashboard
+      const DashboardPage(),
+      // data siswa
+      BlocBuilder<ClassCubit, ClassState>(
+        builder: (context, state) {
+          if (state is ClassSuccess) {
+            return DataSiswaPage(state.classes);
+          } else {
+            context.read<ClassCubit>().getClasses();
+            return Center(child: Text('$state.error'));
+          }
+        },
+      ),
+      // data absensi
+      BlocBuilder<ClassCubit, ClassState>(
+        builder: (context, state) {
+          if (state is ClassSuccess) {
+            return DataAbsenPage(state.classes);
+          } else {
+            context.read<ClassCubit>().getClasses();
+            return Center(child: Text('$state.error'));
+          }
+        },
+      ),
+      // data kelas
+      const DataKelasPage(),
+      // generate qr
+      GenerateQrPage(
+        onDataSiswaPageRequested: _onDataSiswaPageRequested,
+      ),
+      // scan qr
+      const ScanQrPage(),
+    ];
+
     void logout() {
       showDialog(
         context: context,
@@ -159,11 +182,14 @@ class _MainPageState extends State<MainPage> {
               context.read<StudentCubit>().getStudents();
               break;
             case 2:
+              context.read<AttendanceCubit>().getAttendances();
               break;
             case 3:
               context.read<ClassCubit>().getClasses();
               break;
             case 4:
+              context.read<StudentCubit>().getStudents();
+              context.read<ClassCubit>().getClasses();
               break;
             case 5:
               break;
@@ -245,6 +271,7 @@ class _MainPageState extends State<MainPage> {
                 // Update the state of the app
                 _onItemTapped(1);
                 _setTitleName(1);
+                context.read<StudentCubit>().getStudents();
                 // Then close the drawer
                 Navigator.pop(context);
               },
@@ -267,6 +294,7 @@ class _MainPageState extends State<MainPage> {
                 // Update the state of the app
                 _onItemTapped(2);
                 _setTitleName(2);
+                context.read<AttendanceCubit>().getAttendances();
                 // Then close the drawer
                 Navigator.pop(context);
               },

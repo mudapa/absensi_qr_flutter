@@ -1,18 +1,45 @@
-import 'package:absensi_qr/ui/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import '../../../cubit/student/student_cubit.dart';
+import '../../../model/class_model.dart';
+import '../custom_button.dart';
 
 class CardContentQr extends StatefulWidget {
-  const CardContentQr({Key? key}) : super(key: key);
+  final VoidCallback onDataSiswaPageRequested;
+  final List<ClassModel> kelas;
+  const CardContentQr(
+    this.kelas, {
+    Key? key,
+    required this.onDataSiswaPageRequested,
+  }) : super(key: key);
 
   @override
   State<CardContentQr> createState() => _CardContentQrState();
 }
 
 class _CardContentQrState extends State<CardContentQr> {
-  String _selectedClass = 'VII';
-
+  late String newValueClass;
   @override
   Widget build(BuildContext context) {
+    String selectedClass = widget.kelas.isEmpty ? '' : widget.kelas[0].grade;
+
+    void generateQrCode() {
+      if (selectedClass.isEmpty) {
+        // toast
+        Fluttertoast.showToast(
+          msg: 'Silahkan pilih kelas terlebih dahulu!!!',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16,
+        );
+      } else {
+        context.read<StudentCubit>().filterStudent(grade: newValueClass);
+      }
+    }
+
     return Container(
       padding: const EdgeInsets.all(16),
       width: MediaQuery.of(context).size.width * .8,
@@ -34,11 +61,24 @@ class _CardContentQrState extends State<CardContentQr> {
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Total Siswa : 30',
-            style: TextStyle(
-              fontSize: 16,
-            ),
+          BlocBuilder<StudentCubit, StudentState>(
+            builder: (context, state) {
+              if (state is StudentSuccess) {
+                return Text(
+                  'Total Siswa : ${state.students.length}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                  ),
+                );
+              } else {
+                return const Text(
+                  'Total Siswa :',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                );
+              }
+            },
           ),
           const SizedBox(height: 16),
           Container(
@@ -61,16 +101,17 @@ class _CardContentQrState extends State<CardContentQr> {
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                   ),
-                  value: _selectedClass,
+                  value: selectedClass,
                   onChanged: (newValue) {
                     setState(() {
-                      _selectedClass = newValue!;
+                      selectedClass = newValue!;
+                      newValueClass = selectedClass;
                     });
                   },
-                  items: <String>['VII', 'VIII', 'IX'].map((String value) {
+                  items: widget.kelas.map((students) {
                     return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
+                      value: students.grade,
+                      child: Text(students.grade),
                     );
                   }).toList(),
                 ),
@@ -83,7 +124,11 @@ class _CardContentQrState extends State<CardContentQr> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // Memanggil callback untuk membuka halaman "Data Siswa"
+                    context.read<StudentCubit>().getStudents();
+                    widget.onDataSiswaPageRequested.call();
+                  },
                   child: const Text(
                     'Lihat Data Siswa',
                     style: TextStyle(
@@ -99,7 +144,9 @@ class _CardContentQrState extends State<CardContentQr> {
           ),
           const SizedBox(height: 24),
           CustomButton(
-              onPressed: () {},
+              onPressed: () {
+                generateQrCode();
+              },
               icon: const Icon(
                 Icons.qr_code_2_rounded,
                 color: Colors.white,

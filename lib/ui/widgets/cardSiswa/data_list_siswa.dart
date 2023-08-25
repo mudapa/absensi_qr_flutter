@@ -161,6 +161,7 @@ class _DataListSiswaState extends State<DataListSiswa> {
                   textColor: Colors.white,
                   fontSize: 16.0,
                 );
+                context.read<StudentCubit>().getStudents();
                 Navigator.pop(context);
               },
               width: 100,

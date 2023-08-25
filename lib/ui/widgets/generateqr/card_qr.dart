@@ -1,9 +1,19 @@
-import 'package:absensi_qr/ui/widgets/generateqr/card_content_qr.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CardQr extends StatelessWidget {
-  const CardQr({Key? key}) : super(key: key);
+import '../../../cubit/class/class_cubit.dart';
+import 'card_content_qr.dart';
 
+class CardQr extends StatefulWidget {
+  final VoidCallback onDataSiswaPageRequested;
+  const CardQr({Key? key, required this.onDataSiswaPageRequested})
+      : super(key: key);
+
+  @override
+  State<CardQr> createState() => _CardQrState();
+}
+
+class _CardQrState extends State<CardQr> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -18,10 +28,24 @@ class CardQr extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
       ),
-      child: const Column(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CardContentQr(),
+          BlocBuilder<ClassCubit, ClassState>(
+            builder: (context, state) {
+              if (state is ClassSuccess) {
+                return CardContentQr(
+                  state.classes,
+                  onDataSiswaPageRequested: widget.onDataSiswaPageRequested,
+                );
+              } else {
+                context.read<ClassCubit>().getClasses();
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          ),
         ],
       ),
     );

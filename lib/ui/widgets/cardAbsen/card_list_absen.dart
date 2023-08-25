@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../cubit/attendance/attendance_cubit.dart';
 import 'data_list_absen.dart';
 
 class CardListAbsen extends StatelessWidget {
@@ -18,12 +20,12 @@ class CardListAbsen extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
       ),
-      child: const SingleChildScrollView(
+      child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            const Row(
               children: [
                 SizedBox(
                   width: 40,
@@ -56,9 +58,19 @@ class CardListAbsen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: 120,
+                  width: 150,
                   child: Text(
                     'KEHADIRAN',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.purple,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 120,
+                  child: Text(
+                    'KELAS',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.purple,
@@ -107,11 +119,22 @@ class CardListAbsen extends StatelessWidget {
                 ),
               ],
             ),
-            Divider(),
-            Column(
-              children: [
-                DataListAbsen(),
-              ],
+            const Divider(),
+            BlocBuilder<AttendanceCubit, AttendanceState>(
+              builder: (context, state) {
+                if (state is AttendanceSuccess) {
+                  return Column(
+                    children: state.attendances.map((attendances) {
+                      return DataListAbsen(
+                        attendances,
+                        state.attendances.indexOf(attendances),
+                      );
+                    }).toList(),
+                  );
+                } else {
+                  return const Center(child: CircularProgressIndicator());
+                }
+              },
             ),
           ],
         ),

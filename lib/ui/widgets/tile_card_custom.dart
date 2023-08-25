@@ -19,17 +19,17 @@ class _TileCardCustomState extends State<TileCardCustom> {
       child: Column(
         // mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
+              const Icon(
                 Icons.checklist_rounded,
                 color: Colors.white,
                 size: 50,
               ),
-              SizedBox(width: 10),
-              Text(
+              const SizedBox(width: 10),
+              const Text(
                 'ABSENSI SISWA',
                 style: TextStyle(
                   color: Colors.white,
@@ -39,16 +39,16 @@ class _TileCardCustomState extends State<TileCardCustom> {
               const SizedBox(width: 10),
               Text(
                 '${date.day} - ${date.month} - ${date.year}',
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 20,
                 ),
               ),
             ],
           ),
-          Divider(),
-          SizedBox(height: 12),
-          Row(
+          const Divider(),
+          const SizedBox(height: 12),
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Text(
@@ -85,8 +85,8 @@ class _TileCardCustomState extends State<TileCardCustom> {
               ),
             ],
           ),
-          SizedBox(height: 10),
-          Row(
+          const SizedBox(height: 10),
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Text(

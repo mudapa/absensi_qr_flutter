@@ -4,6 +4,7 @@ import 'package:absensi_qr/ui/widgets/cardSiswa/card_list_siswa.dart';
 import 'package:absensi_qr/ui/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../../model/class_model.dart';
 import '../../../widgets/custom_button.dart';
@@ -153,6 +154,14 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
                 _nisTextController.clear();
                 _nameTextController.clear();
                 _phoneController.clear();
+                Fluttertoast.showToast(
+                  msg: 'Berhasil menambahkan data siswa',
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.CENTER,
+                  backgroundColor: Colors.green,
+                  textColor: Colors.white,
+                  fontSize: 16.0,
+                );
                 context.read<StudentCubit>().getStudents();
                 Navigator.pop(context);
               },

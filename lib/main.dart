@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'cubit/attendance/attendance_cubit.dart';
 import 'cubit/auth/auth_cubit.dart';
 import 'cubit/class/class_cubit.dart';
 import 'cubit/student/student_cubit.dart';
@@ -39,6 +40,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => StudentCubit(),
+        ),
+        BlocProvider(
+          create: (context) => AttendanceCubit(),
         ),
       ],
       child: MaterialApp(

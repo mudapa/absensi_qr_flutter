@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../../../cubit/attendance/attendance_cubit.dart';
+import '../../../model/attendance_model.dart';
 import '../custom_button.dart';
 
 class DataListAbsen extends StatefulWidget {
-  const DataListAbsen({Key? key}) : super(key: key);
+  final AttendanceModel absen;
+  final int index;
+
+  const DataListAbsen(
+    this.absen,
+    this.index, {
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<DataListAbsen> createState() => _DataListAbsenState();
@@ -13,6 +25,19 @@ class _DataListAbsenState extends State<DataListAbsen> {
   DateTime date = DateTime.now();
   String _selectedAbsen = 'HADIR';
   final _keteranganController = TextEditingController();
+
+  void _sendWhatsAppMessage(int phone, String name) async {
+    String phoneNumber =
+        '+62$phone'; // Replace with the recipient's phone number
+    String message =
+        'Status Kehadiran $name hari ini ${widget.absen.attend} ${widget.absen.enter}'; // Replace with your desired message
+
+    String link =
+        "https://api.whatsapp.com/send/?phone=$phoneNumber&text=$message";
+
+    // ignore: deprecated_member_use
+    await launch(link);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +57,9 @@ class _DataListAbsenState extends State<DataListAbsen> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
-              const Text(
-                'Asep Supardi',
-                style: TextStyle(
+              Text(
+                widget.absen.name!,
+                style: const TextStyle(
                   fontSize: 18,
                 ),
               ),
@@ -87,8 +112,27 @@ class _DataListAbsenState extends State<DataListAbsen> {
             ),
             const SizedBox(width: 8),
             CustomButton(
-              title: 'Edit',
+              title: 'Ubah',
               onPressed: () {
+                if (_keteranganController.text.isEmpty) {
+                  _keteranganController.text = '-';
+                }
+                context.read<AttendanceCubit>().updateAttendance(
+                      id: widget.absen.id,
+                      attend: _selectedAbsen,
+                      description: _keteranganController.text,
+                    );
+                // Toast
+                Fluttertoast.showToast(
+                  msg: 'Berhasil mengubah data',
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.CENTER,
+                  backgroundColor: Colors.orange,
+                  textColor: Colors.white,
+                  fontSize: 16.0,
+                );
+                _keteranganController.clear();
+                context.read<AttendanceCubit>().getAttendances();
                 Navigator.pop(context);
               },
               width: 100,
@@ -104,40 +148,46 @@ class _DataListAbsenState extends State<DataListAbsen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const SizedBox(
+            SizedBox(
               width: 40,
               child: Text(
-                '1',
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(
-              width: 120,
-              child: Text(
-                '1234567891123456',
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(
-              width: 120,
-              child: Text(
-                'Asep Supardi',
+                '${widget.index + 1}',
                 overflow: TextOverflow.ellipsis,
               ),
             ),
             SizedBox(
               width: 120,
+              child: Text(
+                '${widget.absen.nis}',
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            SizedBox(
+              width: 120,
+              child: Text(
+                widget.absen.name!,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            SizedBox(
+              width: 130,
               child: Container(
                 height: 40,
                 margin: const EdgeInsets.only(right: 16),
                 decoration: BoxDecoration(
-                  color: Colors.green,
+                  color: widget.absen.attend == 'HADIR'
+                      ? Colors.green
+                      : widget.absen.attend == 'SAKIT'
+                          ? Colors.orange
+                          : widget.absen.attend == 'IZIN'
+                              ? Colors.blue
+                              : Colors.red,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Center(
+                child: Center(
                   child: Text(
-                    'HADIR',
-                    style: TextStyle(
+                    widget.absen.attend,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
@@ -146,11 +196,11 @@ class _DataListAbsenState extends State<DataListAbsen> {
               ),
             ),
             SizedBox(
-              width: 150,
+              width: 130,
               child: Padding(
-                padding: const EdgeInsets.only(left: 24),
+                padding: const EdgeInsets.only(left: 26),
                 child: Text(
-                  '${date.hour}:${date.minute}',
+                  widget.absen.grade!,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -158,33 +208,45 @@ class _DataListAbsenState extends State<DataListAbsen> {
             SizedBox(
               width: 150,
               child: Padding(
-                padding: const EdgeInsets.only(left: 24),
+                padding: const EdgeInsets.only(left: 32),
                 child: Text(
-                  '${date.hour + 3}:${date.minute}',
+                  '${widget.absen.enter!.hour}:${widget.absen.enter!.minute}',
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),
-            const SizedBox(
+            SizedBox(
+              width: 150,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 36),
+                child: Text(
+                  '${widget.absen.exit!.hour}:${widget.absen.exit!.minute}',
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+            SizedBox(
               width: 120,
               child: Text(
-                '-',
+                widget.absen.description,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            SizedBox(
-              width: 210,
+            Container(
+              padding: const EdgeInsets.only(left: 16),
+              width: 220,
               child: Row(
                 children: [
                   CustomButton(
-                    title: 'Edit',
+                    title: 'Ubah',
                     onPressed: () {
                       editKelas();
                     },
                     width: 90,
-                    color: Colors.cyan,
+                    color: Colors.orange,
                   ),
                   const SizedBox(width: 8),
+                  // button send message Whatsapp
                   CustomButton(
                     icon: Image.asset(
                       'assets/whatsapp.png',
@@ -192,7 +254,12 @@ class _DataListAbsenState extends State<DataListAbsen> {
                       height: 24,
                       color: Colors.white,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      _sendWhatsAppMessage(
+                        widget.absen.phone!,
+                        widget.absen.name!,
+                      );
+                    },
                     width: 100,
                     color: Colors.green,
                   ),

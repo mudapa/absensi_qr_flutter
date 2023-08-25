@@ -61,7 +61,7 @@ class DashboardPage extends StatelessWidget {
             value: '10',
             color: Colors.orange,
           ),
-          TileCardCustom(),
+          const TileCardCustom(),
         ],
       ),
     );
