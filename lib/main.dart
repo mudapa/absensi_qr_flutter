@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'cubit/auth/auth_cubit.dart';
 import 'cubit/class/class_cubit.dart';
+import 'cubit/student/student_cubit.dart';
 import 'firebase_options.dart';
 import 'ui/pages/home/main_page.dart';
 import 'ui/pages/sign_in_page.dart';
@@ -35,6 +36,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => ClassCubit(),
+        ),
+        BlocProvider(
+          create: (context) => StudentCubit(),
         ),
       ],
       child: MaterialApp(

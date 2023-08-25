@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../cubit/class/class_cubit.dart';
+import '../../../cubit/student/student_cubit.dart';
 import 'data_list_siswa.dart';
 
 class CardListSiswa extends StatelessWidget {
@@ -18,12 +21,12 @@ class CardListSiswa extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
       ),
-      child: const SingleChildScrollView(
+      child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            const Row(
               children: [
                 SizedBox(
                   width: 40,
@@ -78,7 +81,7 @@ class CardListSiswa extends StatelessWidget {
                 SizedBox(
                   width: 150,
                   child: Text(
-                    'NO HP',
+                    'NO HP/WA WALI',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.purple,
@@ -97,11 +100,33 @@ class CardListSiswa extends StatelessWidget {
                 ),
               ],
             ),
-            Divider(),
-            Column(
-              children: [
-                DataListSiswa(),
-              ],
+            const Divider(),
+            BlocBuilder<StudentCubit, StudentState>(
+              builder: (context, state1) {
+                if (state1 is StudentSuccess) {
+                  return Column(
+                    children: state1.students.map((student) {
+                      return BlocBuilder<ClassCubit, ClassState>(
+                        builder: (context, state2) {
+                          if (state2 is ClassSuccess) {
+                            return DataListSiswa(
+                              student,
+                              state2.classes,
+                              state1.students.indexOf(student),
+                            );
+                          } else {
+                            BlocProvider.of<ClassCubit>(context).getClasses();
+                            return const SizedBox();
+                          }
+                        },
+                      );
+                    }).toList(),
+                  );
+                } else {
+                  BlocProvider.of<StudentCubit>(context).getStudents();
+                  return const SizedBox();
+                }
+              },
             ),
           ],
         ),

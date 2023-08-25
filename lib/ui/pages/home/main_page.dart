@@ -1,15 +1,16 @@
-import 'package:absensi_qr/cubit/auth/auth_cubit.dart';
-import 'package:absensi_qr/cubit/class/class_cubit.dart';
-import 'package:absensi_qr/ui/pages/home/content/data_absen_page.dart';
-import 'package:absensi_qr/ui/pages/home/content/data_kelas_page.dart';
-import 'package:absensi_qr/ui/pages/home/content/generate_qr_page.dart';
-import 'package:absensi_qr/ui/pages/home/content/scan_qr_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../cubit/auth/auth_cubit.dart';
+import '../../../cubit/class/class_cubit.dart';
+import '../../../cubit/student/student_cubit.dart';
 import 'content/dashboard_page.dart';
+import 'content/data_absen_page.dart';
+import 'content/data_kelas_page.dart';
 import 'content/data_siswa_page.dart';
+import 'content/generate_qr_page.dart';
+import 'content/scan_qr_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -24,7 +25,16 @@ class _MainPageState extends State<MainPage> {
 
   List<Widget> widgetOptions = [
     const DashboardPage(),
-    const DataSiswaPage(),
+    BlocBuilder<ClassCubit, ClassState>(
+      builder: (context, state) {
+        if (state is ClassSuccess) {
+          return DataSiswaPage(state.classes);
+        } else {
+          context.read<ClassCubit>().getClasses();
+          return Center(child: Text('$state.error'));
+        }
+      },
+    ),
     const DataAbsenPage(),
     const DataKelasPage(),
     const GenerateQrPage(),
@@ -146,6 +156,7 @@ class _MainPageState extends State<MainPage> {
             case 0:
               break;
             case 1:
+              context.read<StudentCubit>().getStudents();
               break;
             case 2:
               break;

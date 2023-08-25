@@ -10,7 +10,7 @@ class DataAbsenPage extends StatefulWidget {
 }
 
 class _DataAbsenPageState extends State<DataAbsenPage> {
-  String _filterClass = 'SEMUA KELAS';
+  String _filterClass = 'SEMUA';
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class _DataAbsenPageState extends State<DataAbsenPage> {
                         ),
                       ),
                       Container(
-                        width: 150,
+                        width: 120,
                         height: 70,
                         decoration: BoxDecoration(
                           border: Border.all(
@@ -98,12 +98,8 @@ class _DataAbsenPageState extends State<DataAbsenPage> {
                                   _filterClass = newValue!;
                                 });
                               },
-                              items: <String>[
-                                'SEMUA KELAS',
-                                'VII',
-                                'VIII',
-                                'IX'
-                              ].map((String value) {
+                              items: <String>['SEMUA', 'VII', 'VIII', 'IX']
+                                  .map((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
                                   child: Text(value),

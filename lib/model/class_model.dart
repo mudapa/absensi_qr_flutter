@@ -2,13 +2,13 @@ import 'package:equatable/equatable.dart';
 
 class ClassModel extends Equatable {
   final String id;
-  final String name;
+  final String grade;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
   const ClassModel({
     required this.id,
-    required this.name,
+    required this.grade,
     this.createdAt,
     this.updatedAt,
   });
@@ -16,7 +16,7 @@ class ClassModel extends Equatable {
   factory ClassModel.fromJson(String id, Map<String, dynamic> json) {
     return ClassModel(
       id: id,
-      name: json['name'],
+      grade: json['grade'],
       createdAt: json['createdAt'].toDate(),
       updatedAt: json['updatedAt'].toDate(),
     );
@@ -24,7 +24,7 @@ class ClassModel extends Equatable {
 
   Map<String, dynamic> toJson() {
     return {
-      'name': name,
+      'grade': grade,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
     };
@@ -33,7 +33,7 @@ class ClassModel extends Equatable {
   @override
   List<Object?> get props => [
         id,
-        name,
+        grade,
         createdAt,
         updatedAt,
       ];

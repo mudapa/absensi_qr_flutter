@@ -33,14 +33,14 @@ class ClassService {
 
   // add Class Data to Firestore
   Future<ClassModel> addClass({
-    required String kelas,
+    required String grade,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) async {
     try {
       // create Class Data to Firestore
       DocumentReference result = await _classReference.add({
-        'name': kelas,
+        'grade': grade,
         'createdAt': createdAt,
         'updatedAt': updatedAt,
       });
@@ -48,7 +48,7 @@ class ClassService {
       // Return ClassModel
       return ClassModel(
         id: result.id,
-        name: kelas,
+        grade: grade,
         createdAt: createdAt,
         updatedAt: updatedAt,
       );
@@ -60,20 +60,20 @@ class ClassService {
   // update Class Data to Firestore
   Future<ClassModel> updateClass({
     required String id,
-    required String kelas,
+    required String grade,
     required DateTime updatedAt,
   }) async {
     try {
       // update Class Data to Firestore
       await _classReference.doc(id).update({
-        'name': kelas,
+        'grade': grade,
         'updatedAt': updatedAt,
       });
 
       // Return ClassModel
       return ClassModel(
         id: id,
-        name: kelas,
+        grade: grade,
         updatedAt: updatedAt,
       );
     } catch (e) {
@@ -82,18 +82,12 @@ class ClassService {
   }
 
   // delete Class Data from Firestore
-  Future<ClassModel> deleteClass({
+  Future<void> deleteClass({
     required String id,
   }) async {
     try {
       // delete Class Data from Firestore
       await _classReference.doc(id).delete();
-
-      // Return ClassModel
-      return ClassModel(
-        id: id,
-        name: '',
-      );
     } catch (e) {
       rethrow;
     }

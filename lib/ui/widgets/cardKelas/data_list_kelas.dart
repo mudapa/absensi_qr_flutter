@@ -32,7 +32,7 @@ class _DataListKelasState extends State<DataListKelas> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Edit Data Kelas \nData Saat ini: ${widget.kelas.name}',
+                'Edit Data Kelas \nData Saat ini: ${widget.kelas.grade}',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -45,7 +45,7 @@ class _DataListKelasState extends State<DataListKelas> {
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.grey.withOpacity(0.1),
-                  labelText: widget.kelas.name,
+                  labelText: widget.kelas.grade,
                   labelStyle: const TextStyle(
                     color: Colors.black,
                   ),
@@ -81,7 +81,7 @@ class _DataListKelasState extends State<DataListKelas> {
               onPressed: () {
                 context.read<ClassCubit>().updateClass(
                       id: widget.kelas.id,
-                      kelas: _valueController.text,
+                      grade: _valueController.text,
                       updatedAt: DateTime.now(),
                     );
                 // Toast
@@ -111,7 +111,7 @@ class _DataListKelasState extends State<DataListKelas> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Hapus Data Kelas \nData Saat ini: ${widget.kelas.name}',
+                'Hapus Data Kelas \nData Saat ini: ${widget.kelas.grade}',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -158,10 +158,10 @@ class _DataListKelasState extends State<DataListKelas> {
     return Column(
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(
-              width: 40,
+              width: 130,
               child: Text(
                 '${widget.index + 1}',
                 style: const TextStyle(
@@ -172,7 +172,7 @@ class _DataListKelasState extends State<DataListKelas> {
             SizedBox(
               width: 120,
               child: Text(
-                widget.kelas.name,
+                widget.kelas.grade,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                 ),

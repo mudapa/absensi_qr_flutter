@@ -28,7 +28,7 @@ class ClassCubit extends Cubit<ClassState> {
 
   // Add class to Firestore
   void addClass({
-    required String kelas,
+    required String grade,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) async {
@@ -38,7 +38,7 @@ class ClassCubit extends Cubit<ClassState> {
 
       // Add class to Firestore
       ClassModel addClasses = await ClassService().addClass(
-        kelas: kelas,
+        grade: grade,
         createdAt: createdAt,
         updatedAt: updatedAt,
       );
@@ -54,7 +54,7 @@ class ClassCubit extends Cubit<ClassState> {
   // Update class to Firestore
   void updateClass({
     required String id,
-    required String kelas,
+    required String grade,
     required DateTime updatedAt,
   }) async {
     try {
@@ -64,7 +64,7 @@ class ClassCubit extends Cubit<ClassState> {
       // Update class to Firestore
       ClassModel updateClasses = await ClassService().updateClass(
         id: id,
-        kelas: kelas,
+        grade: grade,
         updatedAt: updatedAt,
       );
 
@@ -85,12 +85,12 @@ class ClassCubit extends Cubit<ClassState> {
       emit(ClassLoading());
 
       // Delete class from Firestore
-      ClassModel deleteClasses = await ClassService().deleteClass(
+      await ClassService().deleteClass(
         id: id,
       );
 
       // Set DeleteClassSuccess
-      emit(DeleteClassSuccess(deleteClasses: deleteClasses));
+      emit(ClassInitial());
     } catch (e) {
       // Set ClassFailed
       emit(ClassFailed(error: e.toString()));

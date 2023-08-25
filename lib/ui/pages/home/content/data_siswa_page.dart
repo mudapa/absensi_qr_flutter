@@ -1,25 +1,32 @@
+import 'package:absensi_qr/cubit/class/class_cubit.dart';
+import 'package:absensi_qr/cubit/student/student_cubit.dart';
 import 'package:absensi_qr/ui/widgets/cardSiswa/card_list_siswa.dart';
 import 'package:absensi_qr/ui/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../model/class_model.dart';
 import '../../../widgets/custom_button.dart';
 
 class DataSiswaPage extends StatefulWidget {
-  const DataSiswaPage({Key? key}) : super(key: key);
+  final List<ClassModel> kelas;
+  const DataSiswaPage(this.kelas, {Key? key}) : super(key: key);
 
   @override
   State<DataSiswaPage> createState() => _DataSiswaPageState();
 }
 
 class _DataSiswaPageState extends State<DataSiswaPage> {
-  String _selectedGender = 'Laki-laki';
-  String _selectedClass = 'VII';
-  String _filterClass = 'SEMUA KELAS';
+  String _filterClass = 'SEMUA';
+
   final _nisTextController = TextEditingController();
   final _nameTextController = TextEditingController();
+  String _selectedGender = 'Laki-laki';
+  final _phoneController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    String selectedClass = widget.kelas.isEmpty ? '' : widget.kelas[0].grade;
     void tambahSiswa() {
       showDialog(
         context: context,
@@ -79,33 +86,45 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
                     color: Colors.grey.withOpacity(0.5),
                   ),
                 ),
-                child: Column(
-                  children: [
-                    const Text('KELAS'),
-                    DropdownButtonFormField<String>(
-                      value: _selectedClass,
-                      onChanged: (newValue) {
-                        setState(() {
-                          _selectedClass = newValue!;
-                        });
-                      },
-                      items: <String>[
-                        'VII',
-                        'VIII',
-                        'IX',
-                      ].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                    ),
-                  ],
+                child: BlocBuilder<ClassCubit, ClassState>(
+                  builder: (context, state) {
+                    if (state is ClassSuccess) {
+                      return Column(
+                        children: [
+                          const Text('KELAS'),
+                          DropdownButtonFormField<String>(
+                            value: selectedClass,
+                            onChanged: (newValue) {
+                              setState(() {
+                                selectedClass = newValue!;
+                              });
+                            },
+                            items: widget.kelas.isEmpty
+                                ? const <String>[''].map((String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList()
+                                : state.classes.map((kelas) {
+                                    return DropdownMenuItem<String>(
+                                      value: kelas.grade,
+                                      child: Text(kelas.grade),
+                                    );
+                                  }).toList(),
+                          ),
+                        ],
+                      );
+                    } else {
+                      BlocProvider.of<ClassCubit>(context).getClasses();
+                      return const SizedBox();
+                    }
+                  },
                 ),
               ),
               CustomTextFormField(
-                hintText: 'NO HP',
-                controller: _nameTextController,
+                hintText: 'NO HP/WA WALI',
+                controller: _phoneController,
               ),
             ],
           ),
@@ -122,6 +141,18 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
             CustomButton(
               title: 'Simpan',
               onPressed: () {
+                context.read<StudentCubit>().addStudent(
+                      nis: int.parse(_nisTextController.text),
+                      name: _nameTextController.text,
+                      gender: _selectedGender,
+                      grade: selectedClass,
+                      phone: int.parse(_phoneController.text),
+                      createdAt: DateTime.now(),
+                      updatedAt: DateTime.now(),
+                    );
+                _nisTextController.clear();
+                _nameTextController.clear();
+                _phoneController.clear();
                 Navigator.pop(context);
               },
               width: 100,
@@ -190,13 +221,17 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
                           border: Border.all(
                             color: Colors.grey.withOpacity(0.5),
                           ),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
                         ),
                         child: Column(
                           children: [
                             const Text(
-                              'KELAS',
+                              'URUTKAN KELAS',
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 10,
                                 color: Colors.white,
                               ),
                             ),
@@ -214,17 +249,20 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
                                   _filterClass = newValue!;
                                 });
                               },
-                              items: <String>[
-                                'SEMUA KELAS',
-                                'VII',
-                                'VIII',
-                                'IX'
-                              ].map((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
+                              items: [
+                                DropdownMenuItem<String>(
+                                  value: 'SEMUA',
+                                  child: const Text('SEMUA'),
+                                  onTap: () {},
+                                ),
+                                ...widget.kelas.map((kelas) {
+                                  return DropdownMenuItem<String>(
+                                    value: kelas.grade,
+                                    child: Text(kelas.grade),
+                                    onTap: () {},
+                                  );
+                                }).toList(),
+                              ],
                             ),
                           ],
                         ),

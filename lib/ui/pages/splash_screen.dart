@@ -72,7 +72,7 @@ class _SplashScreenState extends State<SplashScreen> {
             const CircularProgressIndicator(),
             const SizedBox(height: 16),
             const Text(
-              'Absensi QR',
+              'ABSENSI QR',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,

@@ -74,7 +74,7 @@ class _DataKelasPageState extends State<DataKelasPage> {
               title: 'Simpan',
               onPressed: () {
                 context.read<ClassCubit>().addClass(
-                      kelas: _classController.text,
+                      grade: _classController.text,
                       createdAt: DateTime.now(),
                       updatedAt: DateTime.now(),
                     );

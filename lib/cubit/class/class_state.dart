@@ -44,17 +44,6 @@ final class UpdateClassSuccess extends ClassState {
   List<Object> get props => [updateClasses];
 }
 
-final class DeleteClassSuccess extends ClassState {
-  final ClassModel deleteClasses;
-
-  const DeleteClassSuccess({
-    required this.deleteClasses,
-  });
-
-  @override
-  List<Object> get props => [deleteClasses];
-}
-
 final class ClassFailed extends ClassState {
   final String error;
 

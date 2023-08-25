@@ -7,6 +7,7 @@ class CustomTextFormField extends StatelessWidget {
   final TextInputType? keyboardType;
   final int? minLength;
   final int? maxLength;
+  final String? helperText;
 
   const CustomTextFormField({
     Key? key,
@@ -16,6 +17,7 @@ class CustomTextFormField extends StatelessWidget {
     this.keyboardType,
     this.minLength,
     this.maxLength,
+    this.helperText,
   }) : super(key: key);
 
   @override
@@ -32,6 +34,7 @@ class CustomTextFormField extends StatelessWidget {
             controller: controller,
             obscureText: obscureText,
             decoration: InputDecoration(
+              helperText: helperText,
               filled: true,
               fillColor: Colors.grey.withOpacity(0.1),
               labelText: hintText,

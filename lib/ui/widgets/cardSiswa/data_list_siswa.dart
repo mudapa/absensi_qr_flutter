@@ -1,22 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../cubit/student/student_cubit.dart';
+import '../../../model/class_model.dart';
+import '../../../model/student_model.dart';
 import '../custom_button.dart';
 import '../custom_text_form_field.dart';
 
 class DataListSiswa extends StatefulWidget {
-  const DataListSiswa({Key? key}) : super(key: key);
+  final StudentModel student;
+  final List<ClassModel> kelas;
+  final int index;
+  const DataListSiswa(
+    this.student,
+    this.kelas,
+    this.index, {
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<DataListSiswa> createState() => _DataListSiswaState();
 }
 
 class _DataListSiswaState extends State<DataListSiswa> {
-  String _selectedGender = 'Laki-laki';
-  String _selectedClass = 'VII';
   final _nisTextController = TextEditingController();
   final _nameTextController = TextEditingController();
+  String _selectedGender = 'Laki-laki';
+  final _phoneTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    String selectedClass = widget.kelas.isEmpty ? '' : widget.kelas[0].grade;
     void editKelas() {
       showDialog(
         context: context,
@@ -34,12 +48,14 @@ class _DataListSiswaState extends State<DataListSiswa> {
               ),
               const SizedBox(height: 8),
               CustomTextFormField(
-                hintText: 'NIS',
+                hintText: '${widget.student.nis}',
                 controller: _nisTextController,
+                helperText: 'NIS',
               ),
               CustomTextFormField(
-                hintText: 'NAMA SISWA',
+                hintText: widget.student.name,
                 controller: _nameTextController,
+                helperText: 'NAMA SISWA',
               ),
               const SizedBox(height: 16),
               Container(
@@ -58,8 +74,10 @@ class _DataListSiswaState extends State<DataListSiswa> {
                           _selectedGender = newValue!;
                         });
                       },
-                      items: <String>['Laki-laki', 'Perempuan']
-                          .map((String value) {
+                      items: <String>[
+                        'Laki-laki',
+                        'Perempuan',
+                      ].map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value),
@@ -80,16 +98,16 @@ class _DataListSiswaState extends State<DataListSiswa> {
                   children: [
                     const Text('KELAS'),
                     DropdownButtonFormField<String>(
-                      value: _selectedClass,
+                      value: selectedClass,
                       onChanged: (newValue) {
                         setState(() {
-                          _selectedClass = newValue!;
+                          selectedClass = newValue!;
                         });
                       },
-                      items: <String>['VII', 'VIII', 'IX'].map((String value) {
+                      items: widget.kelas.map((kelas) {
                         return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
+                          value: kelas.grade,
+                          child: Text(kelas.grade),
                         );
                       }).toList(),
                     ),
@@ -97,8 +115,9 @@ class _DataListSiswaState extends State<DataListSiswa> {
                 ),
               ),
               CustomTextFormField(
-                hintText: 'NO HP',
-                controller: _nameTextController,
+                hintText: '0${widget.student.phone}',
+                controller: _phoneTextController,
+                helperText: 'NO HP/WA WALI',
               ),
             ],
           ),
@@ -115,6 +134,33 @@ class _DataListSiswaState extends State<DataListSiswa> {
             CustomButton(
               title: 'Ubah',
               onPressed: () {
+                if (_nisTextController.text.isEmpty) {
+                  _nisTextController.text = widget.student.nis.toString();
+                }
+                if (_nameTextController.text.isEmpty) {
+                  _nameTextController.text = widget.student.name;
+                }
+                if (_phoneTextController.text.isEmpty) {
+                  _phoneTextController.text = widget.student.phone.toString();
+                }
+                context.read<StudentCubit>().updateStudent(
+                      id: widget.student.id,
+                      nis: int.parse(_nisTextController.text),
+                      name: _nameTextController.text,
+                      gender: _selectedGender,
+                      grade: selectedClass,
+                      phone: int.parse(_phoneTextController.text),
+                      updatedAt: DateTime.now(),
+                    );
+                // Toast
+                Fluttertoast.showToast(
+                  msg: 'Berhasil mengubah data siswa',
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.CENTER,
+                  backgroundColor: Colors.orange,
+                  textColor: Colors.white,
+                  fontSize: 16.0,
+                );
                 Navigator.pop(context);
               },
               width: 100,
@@ -148,6 +194,18 @@ class _DataListSiswaState extends State<DataListSiswa> {
                   CustomButton(
                     title: 'Hapus',
                     onPressed: () {
+                      context.read<StudentCubit>().deleteStudent(
+                            id: widget.student.id,
+                          );
+                      // Toast
+                      Fluttertoast.showToast(
+                        msg: 'Berhasil menghapus data siswa',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0,
+                      );
                       Navigator.pop(context);
                     },
                     width: 100,
@@ -162,42 +220,42 @@ class _DataListSiswaState extends State<DataListSiswa> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const SizedBox(
+            SizedBox(
               width: 40,
-              child: Text('1'),
+              child: Text('${widget.index + 1}'),
             ),
-            const SizedBox(
+            SizedBox(
               width: 120,
               child: Text(
-                '1234567891123456',
+                '${widget.student.nis}',
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            const SizedBox(
+            SizedBox(
               width: 120,
               child: Text(
-                'Asep Supardi',
+                widget.student.name,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            const SizedBox(
+            SizedBox(
               width: 120,
               child: Text(
-                'Laki-Laki',
+                widget.student.gender,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            const SizedBox(
+            SizedBox(
               width: 120,
               child: Text(
-                'VII',
+                widget.student.grade,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            const SizedBox(
+            SizedBox(
               width: 120,
               child: Text(
-                '081212345678',
+                '0${widget.student.phone}',
                 overflow: TextOverflow.ellipsis,
               ),
             ),

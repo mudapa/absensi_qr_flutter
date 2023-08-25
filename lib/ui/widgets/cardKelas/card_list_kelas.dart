@@ -17,8 +17,8 @@ class _CardListKelasState extends State<CardListKelas> {
     return Container(
       padding: const EdgeInsets.only(
         top: 60,
-        left: 8,
-        right: 8,
+        left: 32,
+        right: 32,
       ),
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
@@ -28,7 +28,7 @@ class _CardListKelasState extends State<CardListKelas> {
       child: Column(
         children: [
           const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(
                 width: 40,
