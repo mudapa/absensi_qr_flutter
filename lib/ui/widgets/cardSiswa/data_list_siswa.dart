@@ -35,139 +35,148 @@ class _DataListSiswaState extends State<DataListSiswa> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'Edit Data Kelas',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+          content: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Edit Data Kelas',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              CustomTextFormField(
-                hintText: '${widget.student.nis}',
-                controller: _nisTextController,
-                helperText: 'NIS',
-              ),
-              CustomTextFormField(
-                hintText: widget.student.name,
-                controller: _nameTextController,
-                helperText: 'NAMA SISWA',
-              ),
-              const SizedBox(height: 16),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey.withOpacity(0.5),
+                const SizedBox(height: 8),
+                CustomTextFormField(
+                  hintText: '${widget.student.nis}',
+                  controller: _nisTextController,
+                  helperText: 'NIS',
+                ),
+                CustomTextFormField(
+                  hintText: widget.student.name,
+                  controller: _nameTextController,
+                  helperText: 'NAMA SISWA',
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey.withOpacity(0.5),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      const Text('Jenis Kelamin'),
+                      DropdownButtonFormField<String>(
+                        value: _selectedGender,
+                        onChanged: (newValue) {
+                          setState(() {
+                            _selectedGender = newValue!;
+                          });
+                        },
+                        items: <String>[
+                          'Laki-laki',
+                          'Perempuan',
+                        ].map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ],
                   ),
                 ),
-                child: Column(
-                  children: [
-                    const Text('Jenis Kelamin'),
-                    DropdownButtonFormField<String>(
-                      value: _selectedGender,
-                      onChanged: (newValue) {
-                        setState(() {
-                          _selectedGender = newValue!;
-                        });
-                      },
-                      items: <String>[
-                        'Laki-laki',
-                        'Perempuan',
-                      ].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
+                const SizedBox(height: 16),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey.withOpacity(0.5),
                     ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey.withOpacity(0.5),
+                  ),
+                  child: Column(
+                    children: [
+                      const Text('KELAS'),
+                      DropdownButtonFormField<String>(
+                        value: selectedClass,
+                        onChanged: (newValue) {
+                          setState(() {
+                            selectedClass = newValue!;
+                          });
+                        },
+                        items: widget.kelas.map((kelas) {
+                          return DropdownMenuItem<String>(
+                            value: kelas.grade,
+                            child: Text(kelas.grade),
+                          );
+                        }).toList(),
+                      ),
+                    ],
                   ),
                 ),
-                child: Column(
+                CustomTextFormField(
+                  hintText: '0${widget.student.phone}',
+                  controller: _phoneTextController,
+                  helperText: 'NO HP/WA WALI',
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    const Text('KELAS'),
-                    DropdownButtonFormField<String>(
-                      value: selectedClass,
-                      onChanged: (newValue) {
-                        setState(() {
-                          selectedClass = newValue!;
-                        });
+                    CustomButton(
+                      title: 'Batal',
+                      onPressed: () {
+                        Navigator.pop(context);
                       },
-                      items: widget.kelas.map((kelas) {
-                        return DropdownMenuItem<String>(
-                          value: kelas.grade,
-                          child: Text(kelas.grade),
+                      width: 100,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox(width: 8),
+                    CustomButton(
+                      title: 'Ubah',
+                      onPressed: () {
+                        if (_nisTextController.text.isEmpty) {
+                          _nisTextController.text =
+                              widget.student.nis.toString();
+                        }
+                        if (_nameTextController.text.isEmpty) {
+                          _nameTextController.text = widget.student.name;
+                        }
+                        if (_phoneTextController.text.isEmpty) {
+                          _phoneTextController.text =
+                              widget.student.phone.toString();
+                        }
+                        context.read<StudentCubit>().updateStudent(
+                              id: widget.student.id,
+                              nis: int.parse(_nisTextController.text),
+                              name: _nameTextController.text,
+                              gender: _selectedGender,
+                              grade: selectedClass,
+                              phone: int.parse(_phoneTextController.text),
+                              updatedAt: DateTime.now(),
+                            );
+                        // Toast
+                        Fluttertoast.showToast(
+                          msg: 'Berhasil mengubah data siswa',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                          backgroundColor: Colors.orange,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
                         );
-                      }).toList(),
+                        context.read<StudentCubit>().getStudents();
+                        Navigator.pop(context);
+                      },
+                      width: 100,
+                      color: Colors.orange,
                     ),
                   ],
-                ),
-              ),
-              CustomTextFormField(
-                hintText: '0${widget.student.phone}',
-                controller: _phoneTextController,
-                helperText: 'NO HP/WA WALI',
-              ),
-            ],
+                )
+              ],
+            ),
           ),
-          actions: [
-            CustomButton(
-              title: 'Batal',
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              width: 100,
-              color: Colors.grey,
-            ),
-            const SizedBox(width: 8),
-            CustomButton(
-              title: 'Ubah',
-              onPressed: () {
-                if (_nisTextController.text.isEmpty) {
-                  _nisTextController.text = widget.student.nis.toString();
-                }
-                if (_nameTextController.text.isEmpty) {
-                  _nameTextController.text = widget.student.name;
-                }
-                if (_phoneTextController.text.isEmpty) {
-                  _phoneTextController.text = widget.student.phone.toString();
-                }
-                context.read<StudentCubit>().updateStudent(
-                      id: widget.student.id,
-                      nis: int.parse(_nisTextController.text),
-                      name: _nameTextController.text,
-                      gender: _selectedGender,
-                      grade: selectedClass,
-                      phone: int.parse(_phoneTextController.text),
-                      updatedAt: DateTime.now(),
-                    );
-                // Toast
-                Fluttertoast.showToast(
-                  msg: 'Berhasil mengubah data siswa',
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.CENTER,
-                  backgroundColor: Colors.orange,
-                  textColor: Colors.white,
-                  fontSize: 16.0,
-                );
-                context.read<StudentCubit>().getStudents();
-                Navigator.pop(context);
-              },
-              width: 100,
-              color: Colors.orange,
-            ),
-          ],
         ),
       );
     }

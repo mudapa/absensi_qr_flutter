@@ -32,143 +32,150 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'Tambah Data Siswa',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+          content: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Tambah Data Siswa',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              CustomTextFormField(
-                hintText: 'NIS',
-                controller: _nisTextController,
-              ),
-              CustomTextFormField(
-                hintText: 'NAMA SISWA',
-                controller: _nameTextController,
-              ),
-              const SizedBox(height: 16),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey.withOpacity(0.5),
+                const SizedBox(height: 8),
+                CustomTextFormField(
+                  hintText: 'NIS',
+                  controller: _nisTextController,
+                ),
+                CustomTextFormField(
+                  hintText: 'NAMA SISWA',
+                  controller: _nameTextController,
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey.withOpacity(0.5),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      const Text('Jenis Kelamin'),
+                      DropdownButtonFormField<String>(
+                        value: _selectedGender,
+                        onChanged: (newValue) {
+                          setState(() {
+                            _selectedGender = newValue!;
+                          });
+                        },
+                        items: <String>['Laki-laki', 'Perempuan']
+                            .map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ],
                   ),
                 ),
-                child: Column(
-                  children: [
-                    const Text('Jenis Kelamin'),
-                    DropdownButtonFormField<String>(
-                      value: _selectedGender,
-                      onChanged: (newValue) {
-                        setState(() {
-                          _selectedGender = newValue!;
-                        });
-                      },
-                      items: <String>['Laki-laki', 'Perempuan']
-                          .map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
+                const SizedBox(height: 16),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey.withOpacity(0.5),
+                    ),
+                  ),
+                  child: BlocBuilder<ClassCubit, ClassState>(
+                    builder: (context, state) {
+                      if (state is ClassSuccess) {
+                        return Column(
+                          children: [
+                            const Text('KELAS'),
+                            DropdownButtonFormField<String>(
+                              value: selectedClass,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  selectedClass = newValue!;
+                                });
+                              },
+                              items: widget.kelas.isEmpty
+                                  ? const <String>[''].map((String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList()
+                                  : state.classes.map((kelas) {
+                                      return DropdownMenuItem<String>(
+                                        value: kelas.grade,
+                                        child: Text(kelas.grade),
+                                      );
+                                    }).toList(),
+                            ),
+                          ],
                         );
-                      }).toList(),
+                      } else {
+                        BlocProvider.of<ClassCubit>(context).getClasses();
+                        return const SizedBox();
+                      }
+                    },
+                  ),
+                ),
+                CustomTextFormField(
+                  hintText: 'NO HP/WA WALI',
+                  controller: _phoneController,
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    CustomButton(
+                      title: 'Batal',
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      width: 100,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox(width: 8),
+                    CustomButton(
+                      title: 'Simpan',
+                      onPressed: () {
+                        context.read<StudentCubit>().addStudent(
+                              nis: int.parse(_nisTextController.text),
+                              name: _nameTextController.text,
+                              gender: _selectedGender,
+                              grade: selectedClass,
+                              phone: int.parse(_phoneController.text),
+                              createdAt: DateTime.now(),
+                              updatedAt: DateTime.now(),
+                            );
+                        _nisTextController.clear();
+                        _nameTextController.clear();
+                        _phoneController.clear();
+                        Fluttertoast.showToast(
+                          msg: 'Berhasil menambahkan data siswa',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );
+                        context.read<StudentCubit>().getStudents();
+                        Navigator.pop(context);
+                      },
+                      width: 100,
+                      color: Colors.green,
                     ),
                   ],
-                ),
-              ),
-              const SizedBox(height: 16),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey.withOpacity(0.5),
-                  ),
-                ),
-                child: BlocBuilder<ClassCubit, ClassState>(
-                  builder: (context, state) {
-                    if (state is ClassSuccess) {
-                      return Column(
-                        children: [
-                          const Text('KELAS'),
-                          DropdownButtonFormField<String>(
-                            value: selectedClass,
-                            onChanged: (newValue) {
-                              setState(() {
-                                selectedClass = newValue!;
-                              });
-                            },
-                            items: widget.kelas.isEmpty
-                                ? const <String>[''].map((String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList()
-                                : state.classes.map((kelas) {
-                                    return DropdownMenuItem<String>(
-                                      value: kelas.grade,
-                                      child: Text(kelas.grade),
-                                    );
-                                  }).toList(),
-                          ),
-                        ],
-                      );
-                    } else {
-                      BlocProvider.of<ClassCubit>(context).getClasses();
-                      return const SizedBox();
-                    }
-                  },
-                ),
-              ),
-              CustomTextFormField(
-                hintText: 'NO HP/WA WALI',
-                controller: _phoneController,
-              ),
-            ],
+                )
+              ],
+            ),
           ),
-          actions: [
-            CustomButton(
-              title: 'Batal',
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              width: 100,
-              color: Colors.grey,
-            ),
-            const SizedBox(width: 8),
-            CustomButton(
-              title: 'Simpan',
-              onPressed: () {
-                context.read<StudentCubit>().addStudent(
-                      nis: int.parse(_nisTextController.text),
-                      name: _nameTextController.text,
-                      gender: _selectedGender,
-                      grade: selectedClass,
-                      phone: int.parse(_phoneController.text),
-                      createdAt: DateTime.now(),
-                      updatedAt: DateTime.now(),
-                    );
-                _nisTextController.clear();
-                _nameTextController.clear();
-                _phoneController.clear();
-                Fluttertoast.showToast(
-                  msg: 'Berhasil menambahkan data siswa',
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.CENTER,
-                  backgroundColor: Colors.green,
-                  textColor: Colors.white,
-                  fontSize: 16.0,
-                );
-                context.read<StudentCubit>().getStudents();
-                Navigator.pop(context);
-              },
-              width: 100,
-              color: Colors.green,
-            ),
-          ],
         ),
       );
     }

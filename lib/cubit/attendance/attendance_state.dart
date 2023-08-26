@@ -50,6 +50,19 @@ final class UpdateAttendanceSuccess extends AttendanceState {
       ];
 }
 
+final class ExitAttendanceSuccess extends AttendanceState {
+  final AttendanceModel exitAttendance;
+
+  const ExitAttendanceSuccess({
+    required this.exitAttendance,
+  });
+
+  @override
+  List<Object> get props => [
+        exitAttendance,
+      ];
+}
+
 final class AttendanceFailed extends AttendanceState {
   final String error;
 

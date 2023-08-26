@@ -50,6 +50,19 @@ final class UpdateStudentSuccess extends StudentState {
       ];
 }
 
+final class FindStudentSuccess extends StudentState {
+  final StudentModel findStudent;
+
+  const FindStudentSuccess({
+    required this.findStudent,
+  });
+
+  @override
+  List<Object> get props => [
+        findStudent,
+      ];
+}
+
 final class StudentFailed extends StudentState {
   final String error;
 

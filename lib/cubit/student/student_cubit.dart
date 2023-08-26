@@ -131,4 +131,25 @@ class StudentCubit extends Cubit<StudentState> {
       emit(StudentFailed(error: e.toString()));
     }
   }
+
+  // find student data by document/id from Firestore
+  void findStudent({
+    required String id,
+  }) async {
+    try {
+      // Set StudentLoading
+      emit(StudentLoading());
+
+      // find student data by document/id from Firestore
+      StudentModel findStudent = await StudentService().findStudent(
+        id: id,
+      );
+
+      // Set FindStudentSuccess
+      emit(FindStudentSuccess(findStudent: findStudent));
+    } catch (e) {
+      // Set StudentFailed
+      emit(StudentFailed(error: e.toString()));
+    }
+  }
 }

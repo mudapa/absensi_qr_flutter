@@ -22,77 +22,84 @@ class _DataKelasPageState extends State<DataKelasPage> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'Tambah Data Kelas \nSilahkan isi data kelas',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+          content: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Tambah Data Kelas \nSilahkan isi data kelas',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 32),
-              TextFormField(
-                controller: _classController,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.grey.withOpacity(0.1),
-                  labelText: 'KELAS',
-                  labelStyle: const TextStyle(
-                    color: Colors.black,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                      16,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                      32,
-                    ),
-                    borderSide: const BorderSide(
+                const SizedBox(height: 32),
+                TextFormField(
+                  controller: _classController,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.grey.withOpacity(0.1),
+                    labelText: 'KELAS',
+                    labelStyle: const TextStyle(
                       color: Colors.black,
                     ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                        16,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                        32,
+                      ),
+                      borderSide: const BorderSide(
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    CustomButton(
+                      title: 'Batal',
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      width: 100,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox(width: 8),
+                    CustomButton(
+                      title: 'Simpan',
+                      onPressed: () {
+                        context.read<ClassCubit>().addClass(
+                              grade: _classController.text,
+                              createdAt: DateTime.now(),
+                              updatedAt: DateTime.now(),
+                            );
+                        Fluttertoast.showToast(
+                          msg: 'Berhasil menambahkan data kelas',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );
+                        _classController.clear();
+                        Navigator.pop(context);
+                      },
+                      width: 100,
+                      color: Colors.green,
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
-          actions: [
-            CustomButton(
-              title: 'Batal',
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              width: 100,
-              color: Colors.grey,
-            ),
-            const SizedBox(width: 8),
-            CustomButton(
-              title: 'Simpan',
-              onPressed: () {
-                context.read<ClassCubit>().addClass(
-                      grade: _classController.text,
-                      createdAt: DateTime.now(),
-                      updatedAt: DateTime.now(),
-                    );
-                Fluttertoast.showToast(
-                  msg: 'Berhasil menambahkan data kelas',
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.CENTER,
-                  backgroundColor: Colors.green,
-                  textColor: Colors.white,
-                  fontSize: 16.0,
-                );
-                _classController.clear();
-                Navigator.pop(context);
-              },
-              width: 100,
-              color: Colors.green,
-            ),
-          ],
         ),
       );
     }

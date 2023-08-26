@@ -32,6 +32,7 @@ class AttendanceCubit extends Cubit<AttendanceState> {
     required String id,
     required String attend,
     required String description,
+    required String grade,
   }) async {
     try {
       // Set AttendanceLoading
@@ -43,6 +44,7 @@ class AttendanceCubit extends Cubit<AttendanceState> {
         id: id,
         attend: attend,
         description: description,
+        grade: grade,
       );
 
       // Set UpdateAttendanceSuccess
@@ -69,6 +71,91 @@ class AttendanceCubit extends Cubit<AttendanceState> {
 
       // Set AttendanceSuccess
       emit(AttendanceSuccess(attendances: attendances));
+    } catch (e) {
+      // Set AttendanceFailed
+      emit(AttendanceFailed(error: e.toString()));
+    }
+  }
+
+  // Add attendance to Firestore
+  void scanAttendancesEnter({
+    required String id,
+    required String attend,
+    required String description,
+    required DateTime enter,
+    required DateTime exit,
+    required String name,
+    required String grade,
+    required int phone,
+    required int nis,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) async {
+    try {
+      // Set AttendanceLoading
+      emit(AttendanceLoading());
+
+      // Add attendance to Firestore
+      await AttendanceService().scanAttendancesEnter(
+        id: id,
+        attend: attend,
+        description: description,
+        enter: enter,
+        exit: exit,
+        name: name,
+        grade: grade,
+        phone: phone,
+        nis: nis,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+      );
+
+      // Set AddAttendanceSuccess
+      emit(AddAttendanceSuccess(
+        addAttendance: AttendanceModel(
+          id: id,
+          attend: attend,
+          description: description,
+          enter: enter,
+          exit: exit,
+          name: name,
+          grade: grade,
+          phone: phone,
+          nis: nis,
+          createdAt: createdAt,
+          updatedAt: updatedAt,
+        ),
+      ));
+    } catch (e) {
+      // Set AttendanceFailed
+      emit(AttendanceFailed(error: e.toString()));
+    }
+  }
+
+  // Exit attendance to Firestore
+  void scanAttendancesExit({
+    required String id,
+    required DateTime exit,
+    required String grade,
+  }) async {
+    try {
+      // Set AttendanceLoading
+      emit(AttendanceLoading());
+
+      // Exit attendance to Firestore
+      await AttendanceService().scanAttendancesExit(
+        id: id,
+        exit: exit,
+        grade: grade,
+      );
+
+      // Set AddAttendanceSuccess
+      emit(AddAttendanceSuccess(
+        addAttendance: AttendanceModel(
+          id: id,
+          exit: exit,
+        ),
+      ));
     } catch (e) {
       // Set AttendanceFailed
       emit(AttendanceFailed(error: e.toString()));

@@ -45,100 +45,108 @@ class _DataListAbsenState extends State<DataListAbsen> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'Edit Data Kehadiran',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+          content: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Edit Data Kehadiran',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                widget.absen.name!,
-                style: const TextStyle(
-                  fontSize: 18,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey.withOpacity(0.5),
+                const SizedBox(height: 16),
+                Text(
+                  widget.absen.name!,
+                  style: const TextStyle(
+                    fontSize: 18,
                   ),
                 ),
-                child: Column(
+                const SizedBox(height: 16),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey.withOpacity(0.5),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      const Text('Kehadiran'),
+                      DropdownButtonFormField<String>(
+                        value: _selectedAbsen,
+                        onChanged: (newValue) {
+                          setState(() {
+                            _selectedAbsen = newValue!;
+                          });
+                        },
+                        items: <String>['HADIR', 'SAKIT', 'IZIN', 'ALFA']
+                            .map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _keteranganController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Keterangan',
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    const Text('Kehadiran'),
-                    DropdownButtonFormField<String>(
-                      value: _selectedAbsen,
-                      onChanged: (newValue) {
-                        setState(() {
-                          _selectedAbsen = newValue!;
-                        });
+                    CustomButton(
+                      title: 'Batal',
+                      onPressed: () {
+                        Navigator.pop(context);
                       },
-                      items: <String>['HADIR', 'SAKIT', 'IZIN', 'ALFA']
-                          .map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
+                      width: 100,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox(width: 8),
+                    CustomButton(
+                      title: 'Ubah',
+                      onPressed: () {
+                        if (_keteranganController.text.isEmpty) {
+                          _keteranganController.text = '-';
+                        }
+                        context.read<AttendanceCubit>().updateAttendance(
+                              id: widget.absen.id,
+                              attend: _selectedAbsen,
+                              description: _keteranganController.text,
+                              grade: widget.absen.grade!,
+                            );
+                        // Toast
+                        Fluttertoast.showToast(
+                          msg: 'Berhasil mengubah data',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                          backgroundColor: Colors.orange,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
                         );
-                      }).toList(),
+                        _keteranganController.clear();
+                        context.read<AttendanceCubit>().getAttendances();
+                        Navigator.pop(context);
+                      },
+                      width: 100,
+                      color: Colors.orange,
                     ),
                   ],
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _keteranganController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Keterangan',
-                ),
-              ),
-            ],
+                )
+              ],
+            ),
           ),
-          actions: [
-            CustomButton(
-              title: 'Batal',
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              width: 100,
-              color: Colors.grey,
-            ),
-            const SizedBox(width: 8),
-            CustomButton(
-              title: 'Ubah',
-              onPressed: () {
-                if (_keteranganController.text.isEmpty) {
-                  _keteranganController.text = '-';
-                }
-                context.read<AttendanceCubit>().updateAttendance(
-                      id: widget.absen.id,
-                      attend: _selectedAbsen,
-                      description: _keteranganController.text,
-                    );
-                // Toast
-                Fluttertoast.showToast(
-                  msg: 'Berhasil mengubah data',
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.CENTER,
-                  backgroundColor: Colors.orange,
-                  textColor: Colors.white,
-                  fontSize: 16.0,
-                );
-                _keteranganController.clear();
-                context.read<AttendanceCubit>().getAttendances();
-                Navigator.pop(context);
-              },
-              width: 100,
-              color: Colors.orange,
-            ),
-          ],
         ),
       );
     }
@@ -186,7 +194,7 @@ class _DataListAbsenState extends State<DataListAbsen> {
                 ),
                 child: Center(
                   child: Text(
-                    widget.absen.attend,
+                    widget.absen.attend!,
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -228,7 +236,7 @@ class _DataListAbsenState extends State<DataListAbsen> {
             SizedBox(
               width: 120,
               child: Text(
-                widget.absen.description,
+                widget.absen.description!,
                 overflow: TextOverflow.ellipsis,
               ),
             ),

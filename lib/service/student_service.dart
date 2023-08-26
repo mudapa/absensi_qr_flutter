@@ -155,4 +155,22 @@ class StudentService {
       rethrow;
     }
   }
+
+  // find Student Data by document/id from Firestore
+  Future<StudentModel> findStudent({
+    required String id,
+  }) async {
+    try {
+      // get Student Data from Firestore
+      DocumentSnapshot result = await _studentReference.doc(id).get();
+
+      // Return StudentModel
+      return StudentModel.fromJson(
+        id,
+        result.data() as Map<String, dynamic>,
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

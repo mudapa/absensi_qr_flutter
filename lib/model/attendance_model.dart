@@ -4,11 +4,11 @@ class AttendanceModel extends Equatable {
   final String id;
   final int? nis;
   final String? name;
-  final String attend;
+  final String? attend;
   final String? grade;
   final DateTime? enter;
   final DateTime? exit;
-  final String description;
+  final String? description;
   final int? phone;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -17,11 +17,11 @@ class AttendanceModel extends Equatable {
     required this.id,
     this.nis,
     this.name,
-    required this.attend,
+    this.attend,
     this.grade,
     this.enter,
     this.exit,
-    required this.description,
+    this.description,
     this.phone,
     this.createdAt,
     this.updatedAt,

@@ -19,7 +19,7 @@ class CardContentQr extends StatefulWidget {
 }
 
 class _CardContentQrState extends State<CardContentQr> {
-  late String newValueClass;
+  late String newValueClass = widget.kelas[0].grade;
   @override
   Widget build(BuildContext context) {
     String selectedClass = widget.kelas.isEmpty ? '' : widget.kelas[0].grade;

@@ -28,77 +28,84 @@ class _DataListKelasState extends State<DataListKelas> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Edit Data Kelas \nData Saat ini: ${widget.kelas.grade}',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+          content: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Edit Data Kelas \nData Saat ini: ${widget.kelas.grade}',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 32),
-              TextFormField(
-                controller: _valueController,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.grey.withOpacity(0.1),
-                  labelText: widget.kelas.grade,
-                  labelStyle: const TextStyle(
-                    color: Colors.black,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                      16,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                      32,
-                    ),
-                    borderSide: const BorderSide(
+                const SizedBox(height: 32),
+                TextFormField(
+                  controller: _valueController,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.grey.withOpacity(0.1),
+                    labelText: widget.kelas.grade,
+                    labelStyle: const TextStyle(
                       color: Colors.black,
                     ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                        16,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                        32,
+                      ),
+                      borderSide: const BorderSide(
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    CustomButton(
+                      title: 'Batal',
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      width: 100,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox(width: 8),
+                    CustomButton(
+                      title: 'Ubah',
+                      onPressed: () {
+                        context.read<ClassCubit>().updateClass(
+                              id: widget.kelas.id,
+                              grade: _valueController.text,
+                              updatedAt: DateTime.now(),
+                            );
+                        // Toast
+                        Fluttertoast.showToast(
+                          msg: 'Berhasil mengubah data kelas',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                          backgroundColor: Colors.orange,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );
+                        Navigator.pop(context);
+                      },
+                      width: 100,
+                      color: Colors.orange,
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
-          actions: [
-            CustomButton(
-              title: 'Batal',
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              width: 100,
-              color: Colors.grey,
-            ),
-            const SizedBox(width: 8),
-            CustomButton(
-              title: 'Ubah',
-              onPressed: () {
-                context.read<ClassCubit>().updateClass(
-                      id: widget.kelas.id,
-                      grade: _valueController.text,
-                      updatedAt: DateTime.now(),
-                    );
-                // Toast
-                Fluttertoast.showToast(
-                  msg: 'Berhasil mengubah data kelas',
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.CENTER,
-                  backgroundColor: Colors.orange,
-                  textColor: Colors.white,
-                  fontSize: 16.0,
-                );
-                Navigator.pop(context);
-              },
-              width: 100,
-              color: Colors.orange,
-            ),
-          ],
         ),
       );
     }
