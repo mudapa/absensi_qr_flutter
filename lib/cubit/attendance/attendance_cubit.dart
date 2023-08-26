@@ -33,6 +33,7 @@ class AttendanceCubit extends Cubit<AttendanceState> {
     required String attend,
     required String description,
     required String grade,
+    required DateTime enter,
   }) async {
     try {
       // Set AttendanceLoading
@@ -45,6 +46,7 @@ class AttendanceCubit extends Cubit<AttendanceState> {
         attend: attend,
         description: description,
         grade: grade,
+        enter: enter,
       );
 
       // Set UpdateAttendanceSuccess
@@ -137,6 +139,7 @@ class AttendanceCubit extends Cubit<AttendanceState> {
     required String id,
     required DateTime exit,
     required String grade,
+    required DateTime enter,
   }) async {
     try {
       // Set AttendanceLoading
@@ -147,6 +150,7 @@ class AttendanceCubit extends Cubit<AttendanceState> {
         id: id,
         exit: exit,
         grade: grade,
+        enter: enter,
       );
 
       // Set AddAttendanceSuccess
@@ -156,6 +160,24 @@ class AttendanceCubit extends Cubit<AttendanceState> {
           exit: exit,
         ),
       ));
+    } catch (e) {
+      // Set AttendanceFailed
+      emit(AttendanceFailed(error: e.toString()));
+    }
+  }
+
+  // get attendance by attend HADIR from Firestore
+  void getAttendancesHadir() async {
+    try {
+      // Set AttendanceLoading
+      emit(AttendanceLoading());
+
+      // get attendance by attend HADIR from Firestore
+      List<AttendanceModel> attendances =
+          await AttendanceService().getAttendancesHadir();
+
+      // Set AttendanceSuccess
+      emit(AttendanceSuccess(attendances: attendances));
     } catch (e) {
       // Set AttendanceFailed
       emit(AttendanceFailed(error: e.toString()));

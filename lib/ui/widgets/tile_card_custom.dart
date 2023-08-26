@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../cubit/attendance/attendance_cubit.dart';
 
 class TileCardCustom extends StatefulWidget {
   const TileCardCustom({Key? key}) : super(key: key);
@@ -86,40 +89,99 @@ class _TileCardCustomState extends State<TileCardCustom> {
             ],
           ),
           const SizedBox(height: 10),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Text(
-                '10',
-                style: TextStyle(
-                  color: Colors.green,
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                ),
+              BlocBuilder<AttendanceCubit, AttendanceState>(
+                builder: (context, state) {
+                  if (state is AttendanceSuccess) {
+                    return Text(
+                      '${state.attendances.where((element) => element.attend == 'HADIR').length}',
+                      style: const TextStyle(
+                        color: Colors.green,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    );
+                  } else {
+                    return const Text(
+                      '-',
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    );
+                  }
+                },
               ),
-              Text(
-                '0',
-                style: TextStyle(
-                  color: Colors.orange,
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                ),
+              BlocBuilder<AttendanceCubit, AttendanceState>(
+                  builder: (context, state) {
+                if (state is AttendanceSuccess) {
+                  return Text(
+                    '${state.attendances.where((element) => element.attend == 'SAKIT').length}',
+                    style: const TextStyle(
+                      color: Colors.orange,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  );
+                } else {
+                  return const Text(
+                    '-',
+                    style: TextStyle(
+                      color: Colors.orange,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  );
+                }
+              }),
+              BlocBuilder<AttendanceCubit, AttendanceState>(
+                builder: (context, state) {
+                  if (state is AttendanceSuccess) {
+                    return Text(
+                      '${state.attendances.where((element) => element.attend == 'IZIN').length}',
+                      style: const TextStyle(
+                        color: Colors.greenAccent,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    );
+                  } else {
+                    return const Text(
+                      '-',
+                      style: TextStyle(
+                        color: Colors.greenAccent,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    );
+                  }
+                },
               ),
-              Text(
-                '5',
-                style: TextStyle(
-                  color: Colors.greenAccent,
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              Text(
-                '3',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                ),
+              BlocBuilder<AttendanceCubit, AttendanceState>(
+                builder: (context, state) {
+                  if (state is AttendanceSuccess) {
+                    return Text(
+                      '${state.attendances.where((element) => element.attend == 'ALFA').length}',
+                      style: const TextStyle(
+                        color: Colors.red,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    );
+                  } else {
+                    return const Text(
+                      '-',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    );
+                  }
+                },
               ),
             ],
           ),

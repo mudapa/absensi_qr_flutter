@@ -125,6 +125,7 @@ class _DataListAbsenState extends State<DataListAbsen> {
                               attend: _selectedAbsen,
                               description: _keteranganController.text,
                               grade: widget.absen.grade!,
+                              enter: widget.absen.enter!,
                             );
                         // Toast
                         Fluttertoast.showToast(

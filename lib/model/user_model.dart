@@ -13,9 +13,9 @@ class UserModel extends Equatable {
     required this.role,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
+  factory UserModel.fromJson(String id, Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'],
+      id: id,
       name: json['name'],
       email: json['email'],
       role: json['role'],
@@ -24,7 +24,6 @@ class UserModel extends Equatable {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'name': name,
       'email': email,
       'role': role,

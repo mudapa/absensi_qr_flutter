@@ -177,6 +177,10 @@ class _MainPageState extends State<MainPage> {
         onRefresh: () {
           switch (_selectedIndex) {
             case 0:
+              context.read<AttendanceCubit>().getAttendancesHadir();
+              context.read<AuthCubit>().getAllUsers();
+              context.read<StudentCubit>().getStudents();
+              context.read<ClassCubit>().getClasses();
               break;
             case 1:
               context.read<StudentCubit>().getStudents();
@@ -188,10 +192,13 @@ class _MainPageState extends State<MainPage> {
               context.read<ClassCubit>().getClasses();
               break;
             case 4:
-              context.read<StudentCubit>().getStudents();
               context.read<ClassCubit>().getClasses();
               break;
             case 5:
+              context.read<AttendanceCubit>().getAttendancesHadir();
+              context.read<AuthCubit>().getAllUsers();
+              context.read<StudentCubit>().getStudents();
+              context.read<ClassCubit>().getClasses();
               break;
             default:
           }

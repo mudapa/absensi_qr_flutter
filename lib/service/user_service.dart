@@ -37,4 +37,24 @@ class UserService {
       rethrow;
     }
   }
+
+  // get all user from Firestore
+  Future<List<UserModel>> getUsers() async {
+    try {
+      // get all user from Firestore
+      QuerySnapshot result = await _userReference.get();
+
+      // convert to list of users
+      List<UserModel> users = result.docs.map(
+        (e) {
+          return UserModel.fromJson(e.id, e.data() as Map<String, dynamic>);
+        },
+      ).toList();
+
+      // Return List of UserModel
+      return users;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

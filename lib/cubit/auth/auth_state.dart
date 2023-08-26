@@ -22,6 +22,17 @@ final class AuthSuccess extends AuthState {
   List<Object> get props => [user];
 }
 
+final class ListAuthSuccess extends AuthState {
+  final List<UserModel> users;
+
+  const ListAuthSuccess({
+    required this.users,
+  });
+
+  @override
+  List<Object> get props => [users];
+}
+
 final class AuthFailed extends AuthState {
   final String error;
 

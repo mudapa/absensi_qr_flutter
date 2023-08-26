@@ -73,6 +73,7 @@ class AttendanceService {
     required String attend,
     required String description,
     required String grade,
+    required DateTime enter,
   }) async {
     try {
       // update Attendance Data to Firestore
@@ -93,7 +94,9 @@ class AttendanceService {
       await _classReference
           .doc(result.docs.first.id)
           .collection('attendance')
-          .doc(id)
+          .doc(id +
+              (enter.day.toString()) +
+              (enter.month.toString() + (enter.year.toString())))
           .set(
         {
           'attend': attend,
@@ -193,11 +196,13 @@ class AttendanceService {
             )
             .get();
 
-        // create subcollection attendance in collection classes in firestore
+        // create subcollection attendance with customID in collection classes in firestore
         await _classReference
             .doc(result.docs.first.id)
             .collection('attendance')
-            .doc(id)
+            .doc(id +
+                (enter.day.toString()) +
+                (enter.month.toString() + (enter.year.toString())))
             .set({
           'attend': attend,
           'description': description,
@@ -230,6 +235,7 @@ class AttendanceService {
     required String id,
     required DateTime exit,
     required String grade,
+    required DateTime enter,
   }) async {
     try {
       // create collection attendance in firestore
@@ -254,11 +260,13 @@ class AttendanceService {
             )
             .get();
 
-        // update subcollection attendance in collection classes in firestore
+        // update subcollection attendance without id in collection classes in firestore
         await _classReference
             .doc(result.docs.first.id)
             .collection('attendance')
-            .doc(id)
+            .doc(id +
+                (enter.day.toString()) +
+                (enter.month.toString() + (enter.year.toString())))
             .set(
           {
             'exit': exit,
@@ -307,6 +315,27 @@ class AttendanceService {
         backgroundColor: Colors.yellow,
         textColor: Colors.black,
       );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // get Attendance Data from Firestore
+  Future<List<AttendanceModel>> getAttendancesHadir() async {
+    try {
+      // get Attendance Data from Firestore
+      QuerySnapshot result = await _attendReference.get();
+
+      // convert to list of attendances
+      List<AttendanceModel> attendances = result.docs.map(
+        (e) {
+          return AttendanceModel.fromJson(
+              e.id, e.data() as Map<String, dynamic>);
+        },
+      ).toList();
+
+      // Return List of AttendanceModel
+      return attendances;
     } catch (e) {
       rethrow;
     }

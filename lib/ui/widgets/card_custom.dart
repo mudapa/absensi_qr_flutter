@@ -30,6 +30,7 @@ class CardCustom extends StatelessWidget {
               color: Colors.white,
               fontSize: 20,
             ),
+            overflow: TextOverflow.ellipsis,
           ),
           Text(
             value,
@@ -37,6 +38,7 @@ class CardCustom extends StatelessWidget {
               color: Colors.white,
               fontSize: 24,
             ),
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

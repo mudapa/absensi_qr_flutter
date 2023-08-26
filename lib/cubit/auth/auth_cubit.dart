@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../model/user_model.dart';
 import '../../service/auth_service.dart';
+import '../../service/user_service.dart';
 
 part 'auth_state.dart';
 
@@ -43,6 +44,23 @@ class AuthCubit extends Cubit<AuthState> {
 
       // Set AuthInitial
       emit(AuthInitial());
+    } catch (e) {
+      // Set AuthFailed
+      emit(AuthFailed(error: e.toString()));
+    }
+  }
+
+  // Get all users from Firebase Firestore
+  Future<void> getAllUsers() async {
+    try {
+      // Set AuthLoading
+      emit(AuthLoading());
+
+      // Get all users from Firebase Firestore
+      List<UserModel> users = await UserService().getUsers();
+
+      // Set AuthSuccess
+      emit(ListAuthSuccess(users: users));
     } catch (e) {
       // Set AuthFailed
       emit(AuthFailed(error: e.toString()));

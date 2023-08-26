@@ -50,6 +50,7 @@ class _CardContentScanState extends State<CardContentScan> {
                   id: result,
                   exit: DateTime.now(),
                   grade: state.findStudent.grade,
+                  enter: DateTime.now(),
                 );
           }
         } else if (state is StudentFailed) {
