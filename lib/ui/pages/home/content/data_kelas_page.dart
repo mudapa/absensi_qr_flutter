@@ -76,21 +76,32 @@ class _DataKelasPageState extends State<DataKelasPage> {
                     CustomButton(
                       title: 'Simpan',
                       onPressed: () {
-                        context.read<ClassCubit>().addClass(
-                              grade: _classController.text,
-                              createdAt: DateTime.now(),
-                              updatedAt: DateTime.now(),
-                            );
-                        Fluttertoast.showToast(
-                          msg: 'Berhasil menambahkan data kelas',
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER,
-                          backgroundColor: Colors.green,
-                          textColor: Colors.white,
-                          fontSize: 16.0,
-                        );
-                        _classController.clear();
-                        Navigator.pop(context);
+                        if (_classController.text.isEmpty) {
+                          Fluttertoast.showToast(
+                              msg: "Data tidak boleh kosong",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                              fontSize: 16.0);
+                        } else {
+                          context.read<ClassCubit>().addClass(
+                                grade: _classController.text,
+                                createdAt: DateTime.now(),
+                                updatedAt: DateTime.now(),
+                              );
+                          Fluttertoast.showToast(
+                            msg: 'Berhasil menambahkan data kelas',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            backgroundColor: Colors.green,
+                            textColor: Colors.white,
+                            fontSize: 16.0,
+                          );
+                          _classController.clear();
+                          Navigator.pop(context);
+                        }
                       },
                       width: 100,
                       color: Colors.green,

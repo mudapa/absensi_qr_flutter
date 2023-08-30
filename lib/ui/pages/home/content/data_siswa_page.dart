@@ -145,28 +145,41 @@ class _DataSiswaPageState extends State<DataSiswaPage> {
                     CustomButton(
                       title: 'Simpan',
                       onPressed: () {
-                        context.read<StudentCubit>().addStudent(
-                              nis: int.parse(_nisTextController.text),
-                              name: _nameTextController.text,
-                              gender: _selectedGender,
-                              grade: selectedClass,
-                              phone: int.parse(_phoneController.text),
-                              createdAt: DateTime.now(),
-                              updatedAt: DateTime.now(),
-                            );
-                        _nisTextController.clear();
-                        _nameTextController.clear();
-                        _phoneController.clear();
-                        Fluttertoast.showToast(
-                          msg: 'Berhasil menambahkan data siswa',
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER,
-                          backgroundColor: Colors.green,
-                          textColor: Colors.white,
-                          fontSize: 16.0,
-                        );
-                        context.read<StudentCubit>().getStudents();
-                        Navigator.pop(context);
+                        if (_nisTextController.text.isEmpty ||
+                            _nameTextController.text.isEmpty ||
+                            _phoneController.text.isEmpty) {
+                          Fluttertoast.showToast(
+                              msg: "Data tidak boleh kosong",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                              fontSize: 16.0);
+                        } else {
+                          context.read<StudentCubit>().addStudent(
+                                nis: int.parse(_nisTextController.text),
+                                name: _nameTextController.text,
+                                gender: _selectedGender,
+                                grade: selectedClass,
+                                phone: int.parse(_phoneController.text),
+                                createdAt: DateTime.now(),
+                                updatedAt: DateTime.now(),
+                              );
+                          _nisTextController.clear();
+                          _nameTextController.clear();
+                          _phoneController.clear();
+                          Fluttertoast.showToast(
+                            msg: 'Berhasil menambahkan data siswa',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            backgroundColor: Colors.green,
+                            textColor: Colors.white,
+                            fontSize: 16.0,
+                          );
+                          context.read<StudentCubit>().getStudents();
+                          Navigator.pop(context);
+                        }
                       },
                       width: 100,
                       color: Colors.green,
